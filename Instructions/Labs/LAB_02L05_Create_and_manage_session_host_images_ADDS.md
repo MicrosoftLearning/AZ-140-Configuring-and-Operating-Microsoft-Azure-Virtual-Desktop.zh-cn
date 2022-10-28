@@ -220,7 +220,7 @@ lab:
 1. 在与 az140-25-vm0 的远程桌面会话中，在“管理员:  C:\windows\system32\cmd.exe”窗口中，从命令提示符运行 Sysprep 实用工具，以便让操作系统准备好生成映像并自动将操作系统关闭：
 
    ```cmd
-   C:\Windows\System32\Sysprep\sysprep.exe /oobe /generalize /shutdown
+   C:\Windows\System32\Sysprep\sysprep.exe /oobe /generalize /shutdown /mode:vm
    ```
 
    > **注意**：请等待 Sysprep 过程完成。 这可能需要大约 2 分钟。 这会自动关闭操作系统。 
