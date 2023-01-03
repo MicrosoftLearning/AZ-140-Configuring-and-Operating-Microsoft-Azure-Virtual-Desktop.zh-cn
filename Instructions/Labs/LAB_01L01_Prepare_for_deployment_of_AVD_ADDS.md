@@ -50,10 +50,11 @@ lab:
 
    >**注意**：如果这是第一次启动 Cloud Shell，并看到“未装载任何存储”消息，请选择在本实验室中使用的订阅，然后选择“创建存储”  。 
 
-1. 如果未注册 Microsoft.Compute 资源提供程序，则在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令进行注册 ：
+1. 如果未注册 Microsoft.Compute 和 Microsoft.Network 资源提供程序，则在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令进行注册  ：
 
    ```powershell
    Register-AzResourceProvider -ProviderNamespace 'Microsoft.Compute'
+   Register-AzResourceProvider -ProviderNamespace 'Microsoft.Network'
    ```
 
 1. 在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令以验证 Microsoft.Compute 资源提供程序的注册状态 ：
@@ -263,14 +264,14 @@ lab:
    foreach ($counter in $userCount) {
      New-AdUser -Name $adUserNamePrefix$counter -Path $ouPath -Enabled $True `
        -ChangePasswordAtLogon $false -userPrincipalName $adUserNamePrefix$counter@$adUPNSuffix `
-       -AccountPassword (ConvertTo-SecureString "<password>" -AsPlainText -Force) -passThru
+       -AccountPassword (ConvertTo-SecureString '<password>' -AsPlainText -Force) -passThru
    } 
 
    $adUserNamePrefix = 'wvdadmin1'
    $adUPNSuffix = 'adatum.com'
    New-AdUser -Name $adUserNamePrefix -Path $ouPath -Enabled $True `
        -ChangePasswordAtLogon $false -userPrincipalName $adUserNamePrefix@$adUPNSuffix `
-       -AccountPassword (ConvertTo-SecureString "<password>" -AsPlainText -Force) -passThru
+       -AccountPassword (ConvertTo-SecureString '<password>' -AsPlainText -Force) -passThru
 
    Get-ADGroup -Identity 'Domain Admins' | Add-AdGroupMember -Members 'wvdadmin1'
    ```
