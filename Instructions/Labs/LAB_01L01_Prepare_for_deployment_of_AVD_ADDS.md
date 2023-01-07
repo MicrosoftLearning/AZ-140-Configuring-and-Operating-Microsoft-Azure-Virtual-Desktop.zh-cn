@@ -50,10 +50,11 @@ lab:
 
    >**注意**：如果这是第一次启动 Cloud Shell，并看到“未装载任何存储”消息，请选择在本实验室中使用的订阅，然后选择“创建存储”  。 
 
-1. 如果未注册 Microsoft.Compute 资源提供程序，则在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令进行注册 ：
+1. 如果未注册 Microsoft.Compute 和 Microsoft.Network 资源提供程序，则在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令进行注册  ：
 
    ```powershell
    Register-AzResourceProvider -ProviderNamespace 'Microsoft.Compute'
+   Register-AzResourceProvider -ProviderNamespace 'Microsoft.Network'
    ```
 
 1. 在 Azure 门户中 Cloud Shell 的 PowerShell 会话中，运行以下命令以验证 Microsoft.Compute 资源提供程序的注册状态 ：
@@ -82,12 +83,15 @@ lab:
 1. 在 Azure 门户的“订阅”边栏选项卡左侧垂直菜单的“设置”部分中，选择“使用情况 + 配额” 。 
 
    **注意：** 你可能不需要提出支持工单来增加配额。
+
+   **注意：** 请求增加配额需要使用多重身份验证 (MFA) 登录。 如果需要使用 MFA 配置帐户，请参阅[规划 Azure Active Directory 多重身份验证部署](https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-mfa-getstarted)。 
    
-1. 在“Azure Pass - 赞助 | 使用情况 + 配额”边栏选项卡上，选择“区域”，在下拉列表中选中要用于此实验室的 Azure 区域名称旁边的复选框，确保“计算”条目出现在“区域”条目左侧的下拉列表中，然后在搜索框中键入“标准 BS”    。 
+1. 在“Azure Pass - 赞助 | 使用情况 + 配额”边栏选项卡上，选择“区域”，在下拉列表中选中要用于此实验室的 Azure 区域名称旁边的复选框，选择“应用”，确保“计算”条目出现在“区域”条目左侧的下拉列表中，然后在搜索框中键入“标准 BS”     。 
 1. 在结果列表中，选中“标准 BS 系列 vCPU”项旁边的复选框，选择工具栏中的“请求配额增加”条目，然后在下拉列表中选择“输入新限制”  。
 1. 在“请求配额增加”窗格中的“新建限制”列文本框中，键入“30”，然后选择“提交”   。
+1. 如果出现提示，请在“请求配额增加”窗格中，选择“使用多重身份验证进行身份验证”，并按照提示进行身份验证 。
 1. 允许配额请求完成。  片刻后，“配额详细信息”边栏选项卡将指定已批准请求并增加配额。 关闭“配额详细信息”边栏选项卡。
-1. 重复步骤 3-6，将标准 DSv3 VM 大小的配额限制设置为 30 。
+1. 重复步骤 3-7，将标准 DSv3 VM 大小的配额限制设置为 30 。
 
    >**注意**：根据 Azure 区域的选择和当前需求，可能需要提出支持请求。 有关创建支持请求过程的说明，请参阅[创建 Azure 支持请求])https://docs.microsoft.com/en-us/azure/azure-portal/supportability/how-to-create-azure-support-request) 。
 
@@ -263,14 +267,14 @@ lab:
    foreach ($counter in $userCount) {
      New-AdUser -Name $adUserNamePrefix$counter -Path $ouPath -Enabled $True `
        -ChangePasswordAtLogon $false -userPrincipalName $adUserNamePrefix$counter@$adUPNSuffix `
-       -AccountPassword (ConvertTo-SecureString "<password>" -AsPlainText -Force) -passThru
+       -AccountPassword (ConvertTo-SecureString '<password>' -AsPlainText -Force) -passThru
    } 
 
    $adUserNamePrefix = 'wvdadmin1'
    $adUPNSuffix = 'adatum.com'
    New-AdUser -Name $adUserNamePrefix -Path $ouPath -Enabled $True `
        -ChangePasswordAtLogon $false -userPrincipalName $adUserNamePrefix@$adUPNSuffix `
-       -AccountPassword (ConvertTo-SecureString "<password>" -AsPlainText -Force) -passThru
+       -AccountPassword (ConvertTo-SecureString '<password>' -AsPlainText -Force) -passThru
 
    Get-ADGroup -Identity 'Domain Admins' | Add-AdGroupMember -Members 'wvdadmin1'
    ```
