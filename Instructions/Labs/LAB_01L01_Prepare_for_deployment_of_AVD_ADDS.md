@@ -426,7 +426,7 @@ lab:
 1. 从 [Microsoft Edge 企业版下载页](https://www.microsoft.com/en-us/edge/business/download)下载 Microsoft Edge 的最新稳定版本，安装、启动该版本，并使用默认设置对其进行配置。
 1. 在与 az140-dc-vm11 的远程桌面会话中，使用 Microsoft Edge 导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室使用的订阅中具有所有者角色的用户帐户的 Azure AD 凭据登录。
 1. 在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”文本框，搜索并导航到“Azure Active Directory”边栏选项卡，在“Azure AD 租户”选项卡上，在中心菜单的“管理”部分，选择“Azure AD Connect”   。
-1. 在“Azure AD Connect”边栏选项卡上，选择“下载 Azure AD Connect”链接 。 这将自动打开新的浏览器标签页，其中显示了“Microsoft Azure Active Directory Connect”下载页。
+1. 在“Azure AD Connect”边栏选项卡上，先选择“连接同步”链接，然后选择“下载 Azure AD Connect”链接  。 这将自动打开新的浏览器标签页，其中显示了“Microsoft Azure Active Directory Connect”下载页。
 1. 在“Microsoft Azure Active Directory Connect”下载页，选择“下载” 。
 1. 如果系统提示是运行还是保存 AzureADConnect.msi 安装程序，请选择“运行” 。 否则，请在下载文件后打开该文件以启动 Microsoft Azure Active Directory Connect 向导。
 1. 在“Microsoft Azure Active Directory Connect”向导的“欢迎使用 Azure AD Connect”页面中，选中复选框“我同意许可条款和隐私声明”，然后选择“继续”   。
@@ -460,6 +460,6 @@ lab:
 
 1. 查看“配置完成”页中的信息，然后选择“退出”关闭“Microsoft Azure Active Directory Connect”窗口。
 1. 在与 az140-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，导航到 Adatum 实验室 Azure AD 租户的“用户”-“所有用户”边栏选项卡 。
-1. 在“用户 \| 所有用户”边栏选项卡中，请注意，用户对象列表包括在本实验室前面创建的 AD DS 用户帐户列表，其中“是”条目显示在“同步的目录”列中  。
+1. 在“用户 \| 所有用户”边栏选项卡中，请注意，用户对象列表包括在本实验室前面创建的 AD DS 用户帐户列表，其中“是”条目显示在“本地同步已启用”列中  。
 
    > **注意**：可能需要等待几分钟，然后刷新浏览器页面，AD DS 用户帐户才会出现。

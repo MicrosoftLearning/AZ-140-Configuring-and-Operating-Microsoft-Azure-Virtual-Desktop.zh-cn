@@ -110,7 +110,15 @@ lab:
    New-AzOperationalInsightsWorkspace -Location $location -Name $workspaceName -ResourceGroupName $resourceGroupName
    ```
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”的顶部菜单选择“文件”，打开“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzAutoAccount.ps1”脚本，将第 82 和 86 行之间的代码包含在多行注释中并保存，如下所示  ：
+1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员: Windows PowerShell ISE”的顶部菜单选择“文件”，打开“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzAutoAccount.ps1”脚本，在第 97、98 和 99 行中添加单行注释字符，使其如下所示     ：
+
+   ```powershell
+   #    'Az.Compute'
+   #    'Az.Resources'
+   #    'Az.Automation'
+   ```
+
+1. 在“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzAutoAccount.ps1”脚本中，将 82 和 86 行之间的代码包括在多行注释中，使其如下所示，并将更改保存到文件中  ：
 
    ```powershell
    <#
@@ -121,7 +129,7 @@ lab:
    }
    #>
    ```
-
+   
 1. 在与 az140-dc-vm11 的远程桌面会话中，在“管理员: Windows PowerShell ISE”脚本窗格中打开一个新选项卡，粘贴下面的脚本并运行，以创建作为自动缩放解决方案一部分的 Azure 自动化帐户：
 
    ```powershell
@@ -151,7 +159,20 @@ lab:
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“自动化帐户”，然后在“自动化帐户”边栏选项卡上，选择代表新预配的 Azure 自动化帐户的条目（名称以 az140-automation-51 前缀开头）   。
 1. 在“自动化帐户”边栏选项卡左侧的垂直菜单中，在“流程自动化”部分选择“Runbook”，然后在 Runbook 列表中验证是否存在“WVDAutoScaleRunbookARMBased”Runbook  。
 1. 在“自动化帐户”边栏选项卡左侧垂直菜单的“帐户设置”部分中，选择“运行方式帐户”，然后在右侧帐户列表中，单击“+ Azure 运行方式帐户”旁边的“+ 创建”   。
-1. 在“添加 Azure 运行方式帐户”边栏选项卡上，单击“创建”并验证新帐户是否已成功创建 。
+1. 在“添加 Azure 运行方式帐户”边栏选项卡上，单击“创建”并验证新帐户是否已成功创建 。 
+<!--
+1. On the Automation Account blade, in the vertical menu on the left side, in the **Account Settings** section, select **Identity**.
+1. On the **System assigned** tab of the Identity blade of the automation account, set the **Status** to **On**, select **Save**, and, when prompted to  confirm, select **Yes**.
+1. On the **System assigned** tab of the Identity blade of the automation account, select **Azure role assignments**.
+1. On the **Azure role assignments** blade, select **+ Add role assignment (Preview)**.
+1. On the **Add role assignment (Preview)** blade, specify the following information and select **Save**.
+
+   |Setting|Value|
+   |---|---|
+   |Scope|**Subscription**|
+   |Subscription|the name of the Azure subscription where you provisioned the host pool resources|
+   |Role|**Contributor**|
+-->   
 
 #### <a name="task-3-create-an-azure-logic-app"></a>任务 3：创建 Azure 逻辑应用
 
@@ -164,7 +185,7 @@ lab:
    Invoke-WebRequest -Uri $uri -OutFile ".\CreateOrUpdateAzLogicApp.ps1"
    ```
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  **Windows PowerShell ISE”的顶部菜单选择“文件”，打开 C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzLogicApp.ps1 脚本，将第 134 和 138 行之间的代码包含在多行注释中并保存，如下所示**    ：
+1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员: Windows PowerShell ISE”的顶部菜单选择“文件”，打开“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzLogicApp.ps1”脚本，将第 134 和 138 行之间的代码包含在多行注释中，如下所示，然后保存更改     ：
 
    ```powershell
    <#
