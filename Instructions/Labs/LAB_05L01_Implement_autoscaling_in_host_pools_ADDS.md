@@ -1,356 +1,273 @@
 ---
 lab:
   title: 实验室：在主机池中实现自动扩展 (AD DS)
-  module: 'Module 5: Monitor and Maintain a WVD Infrastructure'
+  module: 'Module 5: Monitor and Maintain an AVD Infrastructure'
 ---
 
-# <a name="lab---implement-autoscaling-in-host-pools-ad-ds"></a>实验室 - 在主机池中实现自动缩放 (AD DS)
-# <a name="student-lab-manual"></a>学生实验室手册
+# 实验室 - 在主机池中实现自动缩放 (AD DS)
+# 学生实验室手册
 
-## <a name="lab-dependencies"></a>实验室依赖项
+## 实验室依赖项
 
 - 本实验室将使用的 Azure 订阅。
-- 一个 Microsoft 帐户或 Azure AD 帐户，该帐户具有将在本实验室中使用的 Azure 订阅的所有者或参与者角色，以及与 Azure 订阅关联的 Azure AD 租户的全局管理员角色。
+- Microsoft 帐户或 Microsoft Entra 帐户，该帐户在本实验室将会使用的 Azure 订阅中具有所有者或参与者角色，在与该 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色。
 - 已完成实验室“准备部署 Azure 虚拟桌面 (AD DS)”
 - 已完成实验室“使用 Azure 门户部署主机池和会话主机 (AD DS)”
 
-## <a name="estimated-time"></a>预计用时
+## 预计用时
 
 60 分钟
 
-## <a name="lab-scenario"></a>实验室方案
+## 实验室方案
 
 你需要在 Active Directory 域服务 (AD DS) 环境中配置 Azure 虚拟桌面会话主机的自动缩放功能。
 
-## <a name="objectives"></a>目标
+## 目标
   
 完成本实验室后，你将能够：
 
 - 配置 Azure 虚拟桌面会话主机的自动缩放功能
 - 验证 Azure 虚拟桌面会话主机的自动缩放功能
 
-## <a name="lab-files"></a>实验室文件 
+## 实验室文件
 
 - 无
 
-## <a name="instructions"></a>说明
+## 说明
 
-### <a name="exercise-1-configure-autoscaling-of-azure-virtual-desktop-session-hosts"></a>练习 1：配置 Azure 虚拟桌面会话主机的自动缩放功能
+### 练习 1：配置 Azure 虚拟桌面会话主机的自动缩放功能
 
 此练习的主要任务如下：
 
-1. 准备自动缩放 Azure 虚拟桌面会话主机
-1. 创建并配置一个 Azure 自动化帐户
-1. 创建 Azure 逻辑应用
+1. 准备缩放 Azure 虚拟桌面会话主机
+2. 创建 Azure 虚拟桌面会话主机的缩放计划
 
-#### <a name="task-1-prepare-for-autoscaling-of-azure-virtual-desktop-session-hosts"></a>任务 1：准备自动缩放 Azure 虚拟桌面会话主机
+#### 任务 1：准备缩放 Azure 虚拟桌面会话主机
 
-1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
-1. 在实验室计算机显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”窗格内的“PowerShell”shell 会话。
-1. 从“Cloud Shell”窗格中的 PowerShell 会话运行以下命令，以启动你将在本实验室中使用的 Azure 虚拟桌面会话主机 Azure VM：
+1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供在本实验室中将要使用的订阅中具有所有者角色的用户帐户凭据进行登录。
+1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
+
+   >**备注**：应使用 MaxSessionLimit**** 参数的非默认值对计划用于自动缩放的主机池进行配置。 可以在 Azure 门户中的主机池设置中配置此值，或者运行“Update-AzWvdHostPool”**** Azure PowerShell cmdlet 配置此值（如本例所示）。 还可以在 Azure 门户中创建池或在运行“New-AzWvdHostPool****”Azure PowerShell cmdlet 时进行显式设置。
+
+1. 在“Cloud Shell”窗格的 PowerShell 会话中运行以下命令，将 az140-21-hp1**** 主机池的 MaxSessionLimit**** 参数值设置为 2****： 
 
    ```powershell
-   Get-AzVM -ResourceGroup 'az140-21-RG' | Start-AzVM -NoWait
+   Update-AzWvdHostPool -ResourceGroupName 'az140-21-RG' `
+   -Name az140-21-hp1 `
+   -MaxSessionLimit 2
    ```
 
-   >**注意**：该命令异步执行（由 -NoWait 参数确定），因此尽管此后可以立即在同一 PowerShell 会话中运行另一个 PowerShell 命令，但实际上也要花几分钟才能启动 Azure VM。 
+   >**备注**：在此实验室中，MaxSessionLimit**** 参数的值被人为地设置得很低，以便触发自动缩放行为。
 
-#### <a name="task-2-create-and-configure-an-azure-automation-account"></a>任务 2：创建并配置一个 Azure 自动化帐户
+   >**备注**：在创建第一个缩放计划之前，需要将“桌面虚拟化启停参与者”RBAC 角色**** 分配给 Azure 虚拟桌面，并将 Azure 订阅用作目标范围。 
 
-1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
-1. 在 Azure 门户中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-dc-vm11”  。
-1. 在“az140-dc-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-dc-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
-1. 出现提示时，提供以下凭据并选择“连接”：
+1. 在显示 Azure 门户的浏览器窗口中，关闭“Cloud Shell”窗格。
+1. 在 Azure 门户中，搜索并选择“订阅”****，然后从订阅列表中选择包含 Azure 虚拟桌面资源的订阅。 
+1. 在“订阅”页上，选择“访问控制(IAM)”****。
+1. 在“访问控制(IAM)”**** 页上的工具栏中，选择“+ 添加”按钮****，然后从下拉列表菜单中选择“添加角色分配”****。
+1. 在“添加角色分配”**** 向导的“角色”**** 选项卡上，搜索并选择“桌面虚拟化启停参与者”**** 角色，然后单击“下一步”****。
+1. 在“添加角色分配”**** 向导的“成员”**** 选项卡上，选择“+ 选择成员”****，搜索并选择“Azure 虚拟桌面”**** 或“Windows 虚拟桌面”****，单击“选择”**** 并单击“下一步”****。
+
+   >**备注**：该值取决于 Microsoft.DesktopVirtualization**** 资源提供程序首次在 Azure 租户中注册的时间。
+
+1. 在“查看 + 分配”**** 选项卡上，选择“查看 + 分配”****。
+
+#### 任务 2：创建 Azure 虚拟桌面会话主机的缩放计划
+
+1. 在实验室计算机上的显示 Azure 门户的浏览器中，搜索并选择“Azure 虚拟桌面”****。 
+1. 在“Azure 虚拟桌面”**** 页上，选择“缩放计划”****，然后选择“+ 创建”****。
+1. 在“创建缩放计划”**** 向导的“基本信息”**** 选项卡上，指定以下信息并选择“下一步计划 >”****（其他设置保留默认值）：
 
    |设置|值|
    |---|---|
-   |用户名|**学生**|
-   |密码|**Pa55w.rd1234**|
+   |资源组|新资源组名称 az140-51-RG****|
+   |名称|az140-51-scaling-plan****|
+   |位置|在上一个实验室中部署会话主机的同一 Azure 区域|
+   |友好名称|az140-51 缩放计划****|
+   |时区|本地时区|
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，以管理员身份启动 Windows PowerShell ISE 。
-1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
+   >**备注**：排除标记允许为要从缩放操作中排除的会话主机指定标记名称。 例如，你可能希望标记已设置为排出模式的 VM，以便自动缩放不会在维护期间使用排除标记“excludeFromScaling”替代排出模式。 
 
-   ```powershell
-   Connect-AzAccount
-   ```
+1. 在“创建缩放计划”**** 向导的“计划”**** 选项卡上，选择“+ 添加计划”****。
+1. 在“添加计划”**** 向导的“常规”**** 选项卡上，指定以下信息，然后单击“下一步”****。
 
-1. 如果出现提示，请使用在具有本实验室所用订阅的所有者角色的用户帐户的 Azure AD 凭据登录。
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下脚本，以下载 PowerShell 脚本，你将使用该脚本创建作为自动缩放解决方案一部分的 Azure 自动化帐户：
-
-   ```powershell
-   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-   $labFilesfolder = 'C:\Allfiles\Labs\05'
-   New-Item -ItemType Directory -Path $labFilesfolder -Force
-   Set-Location -Path $labFilesfolder
-   $uri = 'https://raw.githubusercontent.com/Azure/RDS-Templates/master/wvd-templates/wvd-scaling-script/CreateOrUpdateAzAutoAccount.ps1'
-   Invoke-WebRequest -Uri $Uri -OutFile '.\CreateOrUpdateAzAutoAccount.ps1'
-   ```
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下脚本，以设置将分配给脚本参数的变量值：
-
-   ```powershell
-   $aadTenantId = (Get-AzContext).Tenant.Id
-   $subscriptionId = (Get-AzContext).Subscription.Id
-   $resourceGroupName = 'az140-51-RG'
-   $location = (Get-AzVirtualNetwork -ResourceGroupName 'az140-11-RG' -Name 'az140-adds-vnet11').Location
-   $suffix = Get-Random
-   $automationAccountName = "az140-automation-51$suffix"
-   $workspaceName = "az140-workspace-51$suffix"
-   ```
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下脚本，以创建将在本实验室中使用的资源组：
-
-   ```powershell
-   New-AzResourceGroup -ResourceGroupName $resourceGroupName -Location $location
-   ```
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下脚本，以创建将在本实验室中使用的 Azure Log Analytics 工作区：
-
-   ```powershell
-   New-AzOperationalInsightsWorkspace -Location $location -Name $workspaceName -ResourceGroupName $resourceGroupName
-   ```
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员: Windows PowerShell ISE”的顶部菜单选择“文件”，打开“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzAutoAccount.ps1”脚本，在第 97、98 和 99 行中添加单行注释字符，使其如下所示     ：
-
-   ```powershell
-   #    'Az.Compute'
-   #    'Az.Resources'
-   #    'Az.Automation'
-   ```
-
-1. 在“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzAutoAccount.ps1”脚本中，将 82 和 86 行之间的代码包括在多行注释中，使其如下所示，并将更改保存到文件中  ：
-
-   ```powershell
-   <#
-   # Get the Role Assignment of the authenticated user
-   $RoleAssignments = Get-AzRoleAssignment -SignInName $AzContext.Account -ExpandPrincipalGroups
-   if (!($RoleAssignments | Where-Object { $_.RoleDefinitionName -in @('Owner', 'Contributor') })) {
-    throw 'Authenticated user should have the Owner/Contributor permissions to the subscription'
-   }
-   #>
-   ```
-   
-1. 在与 az140-dc-vm11 的远程桌面会话中，在“管理员: Windows PowerShell ISE”脚本窗格中打开一个新选项卡，粘贴下面的脚本并运行，以创建作为自动缩放解决方案一部分的 Azure 自动化帐户：
-
-   ```powershell
-   $Params = @{
-     "AADTenantId" = $aadTenantId
-     "SubscriptionId" = $subscriptionId 
-     "UseARMAPI" = $true
-     "ResourceGroupName" = $resourceGroupName
-     "AutomationAccountName" = $automationAccountName
-     "Location" = $location
-     "WorkspaceName" = $workspaceName
-   }
-
-   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-   .\CreateOrUpdateAzAutoAccount.ps1 @Params
-   ```
-
-   >**注意**：等待脚本完成。 这可能需要大约 10 分钟。
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，在“管理员: Windows PowerShell ISE”脚本窗格中，查看脚本的输出。 
-
-   >**注意**：输出包括 Webhook URI、Log Analytics 工作区 ID 以及在预配作为自动缩放解决方案一部分的 Azure 逻辑应用时需提供的相应主键值。 
-   
-   >**注意**：记录 Webhook URI 的值。 本实验室中稍后会用到它。
-
-1. 要验证 Azure 自动化帐户的配置，请在与 az140-dc-vm11 的远程桌面会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室使用的订阅中具有所有者角色的用户帐户的 Azure AD 凭据登录。
-1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“自动化帐户”，然后在“自动化帐户”边栏选项卡上，选择代表新预配的 Azure 自动化帐户的条目（名称以 az140-automation-51 前缀开头）   。
-1. 在“自动化帐户”边栏选项卡左侧的垂直菜单中，在“流程自动化”部分选择“Runbook”，然后在 Runbook 列表中验证是否存在“WVDAutoScaleRunbookARMBased”Runbook  。
-1. 在“自动化帐户”边栏选项卡左侧垂直菜单的“帐户设置”部分中，选择“运行方式帐户”，然后在右侧帐户列表中，单击“+ Azure 运行方式帐户”旁边的“+ 创建”   。
-1. 在“添加 Azure 运行方式帐户”边栏选项卡上，单击“创建”并验证新帐户是否已成功创建 。 
-<!--
-1. On the Automation Account blade, in the vertical menu on the left side, in the **Account Settings** section, select **Identity**.
-1. On the **System assigned** tab of the Identity blade of the automation account, set the **Status** to **On**, select **Save**, and, when prompted to  confirm, select **Yes**.
-1. On the **System assigned** tab of the Identity blade of the automation account, select **Azure role assignments**.
-1. On the **Azure role assignments** blade, select **+ Add role assignment (Preview)**.
-1. On the **Add role assignment (Preview)** blade, specify the following information and select **Save**.
-
-   |Setting|Value|
+   |设置|“值”|
    |---|---|
-   |Scope|**Subscription**|
-   |Subscription|the name of the Azure subscription where you provisioned the host pool resources|
-   |Role|**Contributor**|
--->   
+   |计划名称|az140-51-schedule****|
+   |重复|已选择 7****（选择一周的每一天）|
 
-#### <a name="task-3-create-an-azure-logic-app"></a>任务 3：创建 Azure 逻辑应用
+1. 在“添加计划”**** 向导的“增加”**** 选项卡上，指定以下信息，然后单击“下一步”****。
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，切换到“管理员: Windows PowerShell ISE”窗口，然后从“管理员:Windows PowerShell ISE”脚本窗格运行以下脚本，以下载 PowerShell 脚本，你将使用该脚本创建作为自动缩放解决方案一部分的 Azure 逻辑应用：
+   |设置|“值”|
+   |---|---|
+   |开始时间（24 小时制）|当前时间减去 9 小时|
+   |负载均衡算法|广度优先****|
+   |主机的最小百分比 (%)|**20**|
+   |容量阈值 (%)|**60**|
 
-   ```powershell
-   $labFilesfolder = 'C:\Allfiles\Labs\05'
-   Set-Location -Path $labFilesfolder
-   $uri = "https://raw.githubusercontent.com/Azure/RDS-Templates/master/wvd-templates/wvd-scaling-script/CreateOrUpdateAzLogicApp.ps1"
-   Invoke-WebRequest -Uri $uri -OutFile ".\CreateOrUpdateAzLogicApp.ps1"
-   ```
+   >**备注**：在此处选择的负载均衡首选项将覆盖你为原始主机池设置选择的负载均衡首选项。
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员: Windows PowerShell ISE”的顶部菜单选择“文件”，打开“C:\\Allfiles\\Labs\\05\\CreateOrUpdateAzLogicApp.ps1”脚本，将第 134 和 138 行之间的代码包含在多行注释中，如下所示，然后保存更改     ：
+   >**备注**：主机的最小百分比指定你希望始终保持开启的会话主机的百分比。 如果输入的百分比不是整数，则会向上舍入为最接近的整数。 
 
-   ```powershell
-   <#
-   # Get the Role Assignment of the authenticated user
-   $RoleAssignments = Get-AzRoleAssignment -SignInName $AzContext.Account -ExpandPrincipalGroups
-   if (!($RoleAssignments | Where-Object { $_.RoleDefinitionName -in @('Owner', 'Contributor') })) {
-    throw 'Authenticated user should have the Owner/Contributor permissions to the subscription'
-   }
-   #>
-   ```
+   >**备注**：容量阈值代表将触发缩放操作的可用主机池容量百分比。 例如，如果主机池中启用了两个会话主机（会话上限为 20），则主机池可用容量为 40。 如果将容量阈值设置为 75% 并且会话主机具有超过 30 个用户会话，则自动缩放将启用第三个会话主机。 这会将可用的主机池容量从 40 更改为 60。
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下命令以设置将分配给脚本参数的变量值（将 `<webhook_URI>` 占位符替换为你之前在本实验室中记录的 Webhook URI 的值）：
+1. 在“添加计划”**** 向导的“高峰时段”**** 选项卡上，指定以下信息，然后单击“下一步”****。
 
-   ```powershell
-   $AADTenantId = (Get-AzContext).Tenant.Id
-   $AzSubscription = (Get-AzContext).Subscription.Id
-   $ResourceGroup = Get-AzResourceGroup -Name 'az140-51-RG'
-   $WVDHostPool = Get-AzResource -ResourceType "Microsoft.DesktopVirtualization/hostpools" -Name 'az140-21-hp1'
-   $LogAnalyticsWorkspace = (Get-AzOperationalInsightsWorkspace -ResourceGroupName $ResourceGroup.ResourceGroupName)[0]
-   $LogAnalyticsWorkspaceId = $LogAnalyticsWorkspace.CustomerId
-   $LogAnalyticsWorkspaceKeys = (Get-AzOperationalInsightsWorkspaceSharedKey -ResourceGroupName $ResourceGroup.ResourceGroupName -Name $LogAnalyticsWorkspace.Name)
-   $LogAnalyticsPrimaryKey = $LogAnalyticsWorkspaceKeys.PrimarySharedKey
-   $RecurrenceInterval = 2
-   $BeginPeakTime = '1:00'
-   $EndPeakTime = '1:01'
-   $TimeDifference = '0:00'
-   $SessionThresholdPerCPU = 1
-   $MinimumNumberOfRDSH = 1
-   $MaintenanceTagName = 'CustomMaintenance'
-   $LimitSecondsToForceLogOffUser = 5
-   $LogOffMessageTitle = 'Autoscaling'
-   $LogOffMessageBody = 'Forcing logoff due to autoscaling'
+   |设置|“值”|
+   |---|---|
+   |开始时间（24 小时制）|当前时间减去 8 小时|
+   |负载均衡算法|**深度优先**|
 
-   $AutoAccount = (Get-AzAutomationAccount -ResourceGroupName $ResourceGroup.ResourceGroupName)[0]
-   $AutoAccountConnection = Get-AzAutomationConnection -ResourceGroupName $AutoAccount.ResourceGroupName -AutomationAccountName $AutoAccount.AutomationAccountName
+   >**备注**：开始时间指定增加阶段的结束时间。
 
-   $WebhookURIAutoVar = '<webhook_URI>'
-   ```
+   >**备注**：此阶段中的容量阈值由增加容量阈值确定。
 
-   >**注意**：参数值旨在加速自动缩放行为。 在生产环境中，你应该对它们进行调整以符合自己的特定要求。
+1. 在“添加计划”**** 向导的“减少”**** 选项卡上，指定以下信息，然后单击“下一步”****。
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格运行以下脚本，以创建作为自动缩放解决方案一部分的 Azure 逻辑应用：
+   |设置|“值”|
+   |---|---|
+   |开始时间（24 小时制）|当前时间减去 2 小时|
+   |负载均衡算法|**深度优先**|
+   |主机的最小百分比 (%)|**10**|
+   |容量阈值 (%)|**90**|
+   |强制注销用户|**是**|
+   |注销用户并关闭 VM 之前的延迟时间（分钟）|**30**|
 
-   ```powershell
-   $Params = @{
-     "AADTenantId"                   = $AADTenantId                             # Optional. If not specified, it will use the current Azure context
-     "SubscriptionID"                = $AzSubscription.Id                       # Optional. If not specified, it will use the current Azure context
-     "ResourceGroupName"             = $ResourceGroup.ResourceGroupName         # Optional. Default: "WVDAutoScaleResourceGroup"
-     "Location"                      = $ResourceGroup.Location                  # Optional. Default: "West US2"
-     "UseARMAPI"                     = $true
-     "HostPoolName"                  = $WVDHostPool.Name
-     "HostPoolResourceGroupName"     = $WVDHostPool.ResourceGroupName           # Optional. Default: same as ResourceGroupName param value
-     "LogAnalyticsWorkspaceId"       = $LogAnalyticsWorkspaceId                 # Optional. If not specified, script will not log to the Log Analytics
-     "LogAnalyticsPrimaryKey"        = $LogAnalyticsPrimaryKey                  # Optional. If not specified, script will not log to the Log Analytics
-     "ConnectionAssetName"           = $AutoAccountConnection.Name              # Optional. Default: "AzureRunAsConnection"
-     "RecurrenceInterval"            = $RecurrenceInterval                      # Optional. Default: 15
-     "BeginPeakTime"                 = $BeginPeakTime                           # Optional. Default: "09:00"
-     "EndPeakTime"                   = $EndPeakTime                             # Optional. Default: "17:00"
-     "TimeDifference"                = $TimeDifference                          # Optional. Default: "-7:00"
-     "SessionThresholdPerCPU"        = $SessionThresholdPerCPU                  # Optional. Default: 1
-     "MinimumNumberOfRDSH"           = $MinimumNumberOfRDSH                     # Optional. Default: 1
-     "MaintenanceTagName"            = $MaintenanceTagName                      # Optional.
-     "LimitSecondsToForceLogOffUser" = $LimitSecondsToForceLogOffUser           # Optional. Default: 1
-     "LogOffMessageTitle"            = $LogOffMessageTitle                      # Optional. Default: "Machine is about to shut down."
-     "LogOffMessageBody"             = $LogOffMessageBody                       # Optional. Default: "Your session will be logged off. Please save and close everything."
-     "WebhookURI"                    = $WebhookURIAutoVar
-   }
+   >**备注**：如果启用了“强制注销用户”**** ，则自动缩放会将具有最低用户会话数量的会话主机置于排出模式，向所有活动用户会话发送关于即将发生的关闭的通知，并在指定的延迟时间后强制注销这些用户。 在自动缩放注销所有用户会话后，它会解除分配 VM。 
 
-   .\CreateOrUpdateAzLogicApp.ps1 @Params
-   ```
+   >**备注**：如果在减少期间未启用强制注销，则将解除分配无活动会话或已断开连接的会话的会话主机。
 
-   >**注意**：等待脚本完成。 这可能需要大约 2 分钟。
+1. 在“添加计划”**** 向导的“非高峰时段”**** 选项卡上，指定以下信息，然后单击“添加”****。
 
-1. 要验证 Azure 逻辑应用的配置，请在与 az140-dc-vm11 的远程桌面会话中，切换到显示 Azure 门户的“Microsoft Edge”窗口，搜索并选择“逻辑应用”，然后在“逻辑应用”边栏选项卡上，选择表示新预配的名为“az140-21-hp1_Autoscale_Scheduler”的 Azure 逻辑应用条目   。
-1. 在“az140-21-hp1_Autoscale_Scheduler”边栏选项卡左侧垂直菜单中的“开发工具”部分，选择“逻辑应用设计器”  。 
-1. 在设计器窗格中，单击标记为“定期”的矩形，并注意你可以使用它来控制评估自动缩放需求的频率。 
+   |设置|“值”|
+   |---|---|
+   |开始时间（24 小时制）|当前时间减去 1 小时|
+   |负载均衡算法|**深度优先**|
 
-### <a name="exercise-2-verify-and-review-autoscaling-of-azure-virtual-desktop-session-hosts"></a>练习 2：验证和查看 Azure 虚拟桌面会话主机的自动缩放功能
+   >**备注**：此阶段中的容量阈值由减少容量阈值确定。
+
+1. 返回“创建缩放计划”**** 向导的“计划”**** 选项卡，选择“下一步: 主机池分配 >”****：
+1. 在“主机池分配”**** 页上的“选择主机池”**** 下拉列表中，选择“az140-21-hp1”****，确保选中“启用自动缩放”**** 复选框，选择“查看 + 创建”****，然后选择“创建”****。
+
+
+### 练习 2：验证 Azure 虚拟桌面会话主机的自动缩放
 
 此练习的主要任务如下：
 
+1. 设置诊断以跟踪 Azure 虚拟桌面自动缩放
 1. 验证 Azure 虚拟桌面会话主机的自动缩放功能
-1. 使用 Azure Log Analytics 跟踪 Azure 虚拟桌面事件
 
-#### <a name="task-1-verify-autoscaling-of-azure-virtual-desktop-session-hosts"></a>任务 1：验证 Azure 虚拟桌面会话主机的自动缩放功能
+#### 任务 1：设置诊断以跟踪 Azure 虚拟桌面自动缩放
 
-1. 要验证 Azure 虚拟桌面会话主机的自动缩放功能，请在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的“Microsoft Edge”窗口中搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡上，查看“az140-21-RG”资源组中三个 Azure VM 的状态   。
-1. 验证这三个 Azure VM 中的两个 VM 是否正在解除分配或已停止（已解除分配）。
+1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
 
-   >**注意**：验证自动缩放正常运行后，应禁用 Azure 逻辑应用以最大限度地降低相应的费用。
+   >**备注**：将使用 Azure 存储帐户来存储自动缩放事件。 可以直接从 Azure 门户创建，也可以使用 Azure PowerShell，如此任务所示。
 
-1. 要禁用 Azure 逻辑应用，请在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的“Microsoft Edge”窗口中，搜索并选择“逻辑应用”，然后在“逻辑应用”边栏选项卡上，选择代表新预配的名为“az140-21-hp1_Autoscale_Scheduler”的 Azure 逻辑应用条目   。
-1. 在“az140-21-hp1_Autoscale_Scheduler”边栏选项卡上的工具栏中，单击“禁用”。 
-1. 在“az140-21-hp1_Autoscale_Scheduler”边栏选项卡上的“基本信息”部分中，查看过去 24 小时内成功运行的次数等信息，以及提供重复频率的“摘要”部分  。 
-1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“自动化帐户”，然后在“自动化帐户”边栏选项卡上，选择代表新预配的 Azure 自动化帐户的条目（名称以 az140-automation-51 前缀开头）   。
-1. 在“自动化帐户”边栏选项卡左侧的垂直菜单中，在“流程自动化”部分选择“作业”，然后查看与“WVDAutoScaleRunbookARMBased”runbook 的各个调用对应的作业列表   。
-1. 选择最近的作业，然后在其边栏选项卡上单击“所有日志”选项卡标题。 随即将显示作业执行步骤的详细列表。
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以创建 Azure 存储帐户：
 
-#### <a name="task-2-use-azure-log-analytics-to-track-azure-virtual-desktop-events"></a>任务 2：使用 Azure Log Analytics 跟踪 Azure 虚拟桌面事件
-
->**注意**：要分析自动缩放和任何其他 Azure 虚拟桌面事件，可以使用 Log Analytics。
-
-1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的“Microsoft Edge”窗口中，搜索并选择“Log Analytics 工作区”，然后在“Log Analytics 工作区”边栏选项卡上，选择代表本实验室使用的 Azure Log Analytics 工作区条目（名称以 az140-workspace-51 前缀开头）   。
-1. 在“Log Analytics 工作区”边栏选项卡左侧垂直菜单的“常规”部分中，单击“日志”，如果需要，请关闭“欢迎使用 Log Analytics”窗口，然后前往“查询”窗格   。
-1. 在“查询”窗格左侧的“所有查询”垂直菜单中，选择“Azure 虚拟桌面”并查看预定义的查询  。
-1. 关闭“查询”窗格。 这将自动显示“新建查询 1”选项卡。
-1. 在“查询”窗口中，粘贴以下查询，单击“运行”以显示本实验室中使用的主机池的所有事件：
-
-   ```kql
-   WVDTenantScale_CL
-   | where hostpoolName_s == "az140-21-hp1"
-   | project TimeStampUTC = TimeGenerated, TimeStampLocal = TimeStamp_s, HostPool = hostpoolName_s, LineNumAndMessage = logmessage_s, AADTenantId = TenantId
+   ```powershell
+   $resourceGroupName = 'az140-51-RG'
+   $location = (Get-AzResourceGroup -ResourceGroupName $resourceGroupName).Location
+   $suffix = Get-Random
+   $storageAccountName = "az140st51$suffix"
+   New-AzStorageAccount -Location $location -Name $storageAccountName -ResourceGroupName $resourceGroupName -SkuName Standard_LRS
    ```
 
-   >**注意**：如果在使用剪切和粘贴结构时第二行中有一个额外的竖线字符 (|)，请将其删除以避免失败。 这适用于每个查询。
-   >**注意**：如果未显示任何结果，请等待几分钟，然后重试。
+   >**备注**：等待至存储帐户预配完成。
 
-1. 在“查询”窗口中，粘贴以下查询，单击“运行”以显示目标主机池中当前运行的会话主机和活动用户会话的总数：
+1. 在显示 Azure 门户的浏览器窗口中，关闭“Cloud Shell”窗格。
+1. 在实验室计算机上显示 Azure 门户的浏览器中，导航到在上一练习中创建的缩放计划页。
+1. 在“az140-51-scaling-plan”**** 页上，选择“诊断设置”****，然后选择“+ 添加诊断设置”****。
+1. 在“诊断设置”**** 页上的“诊断设置名称”**** 文本框中，输入“az140-51-scaling-plan-diagnostics”****，然后在“类别组”**** 部分选择“allLogs”****。 
+1. 在同一页上，在“目标详细信息”**** 部分，选择“存档到存储帐户”****，然后在“存储帐户”**** 下拉列表中，选择以 az140st51**** 前缀开头的存储帐户名称。
+1. 选择“保存”。
 
-   ```kql
-   WVDTenantScale_CL
-   | where logmessage_s contains "Number of running session hosts:"
-     or logmessage_s contains "Number of user sessions:"
-     or logmessage_s contains "Number of user sessions per Core:"
-   | where hostpoolName_s == "az140-21-hp1"
-   | project TimeStampUTC = TimeGenerated, TimeStampLocal = TimeStamp_s, HostPool = hostpoolName_s, LineNumAndMessage = logmessage_s, AADTenantId = TenantId
+#### 任务 2：验证 Azure 虚拟桌面会话主机的自动缩放
+
+1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
+1. 从“Cloud Shell”窗格中的 PowerShell 会话运行以下命令，以启动你将在本实验室中使用的 Azure 虚拟桌面会话主机 Azure VM：
+
+   ```powershell
+   Get-AzVM -ResourceGroup 'az140-21-RG' | Start-AzVM
    ```
 
-1. 在“查询”窗口中，粘贴以下查询，单击“运行”以显示主机池中所有会话主机 VM 的状态：
+   >**备注**：等待至会话主机 Azure VM 运行。
 
-   ```kql
-   WVDTenantScale_CL
-   | where logmessage_s contains "Session host:"
-   | where hostpoolName_s == "az140-21-hp1"
-   | project TimeStampUTC = TimeGenerated, TimeStampLocal = TimeStamp_s, HostPool = hostpoolName_s, LineNumAndMessage = logmessage_s, AADTenantId = TenantId
+1. 在实验室计算机上显示 Azure 门户的 Web 浏览器窗口中，导航到“az140-21-hp1”**** 主机池页。
+1. 在“az140-21-hp1”**** 页中，选择“会话主机”****。
+1. 等待至少一个会话主机列出并显示“关闭”**** 状态。
+
+   >**备注**：可能需要刷新页面以更新会话主机的状态。
+
+   >**备注**：如果所有会话主机保持可用，请导航回“az140-51-scaling-plan”**** 页，并减少“最低主机百分比(%)”****“减少”**** 设置的值。
+
+   >**备注**：一个或多个会话主机的状态发生更改后，自动缩放日志应会显示在 Azure 存储帐户中。 
+
+1. 在 Azure 门户中，搜索并选择“存储帐户”****，然后在“存储帐户”**** 页上，选择表示之前在本练习中创建的存储帐户（名称以 az140st51**** 前缀开头）的条目。
+1. 在“存储帐户”页上，选择“容器”****。
+1. 在容器列表中，选择“insights-logs-autoscale”****。
+1. 在“insights-logs-autoscale”**** 页上，在文件夹层次结构中导航，找到表示存储在容器中的 JSON 格式 blob 条目。
+1. 选择 Blob 条目，选择页面最右侧的省略号图标，然后在下拉菜单中选择“下载”****。
+1. 在实验室计算机上，在所选的文本编辑器中打开下载的 Blob 并检查其内容。 你应该能够找到对自动缩放事件的引用。 
+
+   >**备注**：下面是一个示例 Blob 内容，其中包括对自动缩放事件的引用：
+
+   ```json
+   host_Ring    "R0"
+   Level    4
+   ActivityId   "00000000-0000-0000-0000-000000000000"
+   time "2023-03-26T19:35:46.0074598Z"
+   resourceId   "/SUBSCRIPTIONS/AAAAAAAE-0000-1111-2222-333333333333/RESOURCEGROUPS/AZ140-51-RG/PROVIDERS/MICROSOFT.DESKTOPVIRTUALIZATION/SCALINGPLANS/AZ140-51-SCALING-PLAN"
+   operationName    "ScalingEvaluationSummary"
+   category "Autoscale"
+   resultType   "Succeeded"
+   level    "Informational"
+   correlationId    "ddd3333d-90c2-478c-ac98-b026d29e24d5"
+   properties   
+   Message  "Active session hosts are at 0.00% capacity (0 sessions across 3 active session hosts). This is below the minimum capacity threshold of 90%. 2 session hosts can be drained and deallocated."
+   HostPoolArmPath  "/subscriptions/aaaaaaaa-0000-1111-2222-333333333333/resourcegroups/az140-21-rg/providers/microsoft.desktopvirtualization/hostpools/az140-21-hp1"
+   ScalingEvaluationStartTime   "2023-03-26T19:35:43.3593413Z"
+   TotalSessionHostCount    "3"
+   UnhealthySessionHostCount    "0"
+   ExcludedSessionHostCount "0"
+   ActiveSessionHostCount   "3"
+   SessionCount "0"
+   CurrentSessionOccupancyPercent   "0"
+   CurrentActiveSessionHostsPercent "100"
+   Config.ScheduleName  "az140-51-schedule"
+   Config.SchedulePhase "OffPeak"
+   Config.MaxSessionLimitPerSessionHost "2"
+   Config.CapacityThresholdPercent  "90"
+   Config.MinActiveSessionHostsPercent  "5"
+   DesiredToScaleSessionHostCount   "-2"
+   EligibleToScaleSessionHostCount  "1"
+   ScalingReasonType    "DeallocateVMs_BelowMinSessionThreshold"
+   BeganForceLogoffOnSessionHostCount   "0"
+   BeganDeallocateVmCount   "1"
+   BeganStartVmCount    "0"
+   TurnedOffDrainModeCount  "0"
+   TurnedOnDrainModeCount   "1"
    ```
 
-1. 在“查询”窗口中，粘贴以下查询，单击“运行”以显示任何与缩放相关的错误和警告：
 
-   ```kql
-   WVDTenantScale_CL
-   | where logmessage_s contains "ERROR:" or logmessage_s contains "WARN:"
-   | project TimeStampUTC = TimeGenerated, TimeStampLocal = TimeStamp_s, HostPool = hostpoolName_s, LineNumAndMessage = logmessage_s, AADTenantId = TenantId
-   ```
-
->**注意**：忽略有关 `TenantId` 的错误消息
-
-### <a name="exercise-3-stop-and-deallocate-azure-vms-provisioned-in-the-lab"></a>练习 3：停止并解除分配在实验室中预配的 Azure VM
+### 练习 3：停止并解除分配在实验室中预配的 Azure VM
 
 此练习的主要任务如下：
 
 1. 停止并解除分配在实验室中预配的 Azure VM
 
->**注意**：在此练习中，你将解除分配此实验室中预配的 Azure VM，以最大程度减少相应的计算费用
+>**备注**：在此练习中，你将解除分配此实验室中使用的 Azure VM，以最大程度减少相应的计算费用。
 
-#### <a name="task-1-deallocate-azure-vms-provisioned-in-the-lab"></a>任务 1：解除分配在实验室中预配的 Azure VM
+#### 任务 1：解除分配在实验室中预配的 Azure VM
 
-1. 切换到实验室计算机，然后在显示 Azure 门户的 Web 浏览器窗口中，打开 Cloud Shell 窗格内的“PowerShell”shell 会话 。
-1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以列出本实验室中创建的所有 Azure VM：
+1. 切换到实验室计算机，然后在显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell**** 会话 。
+1. 从“Cloud Shell”窗格的 PowerShell 会话中运行以下命令，以列出本实验室中创建的所有 Azure VM：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG'
    ```
 
-1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以停止和解除分配本实验室中创建的所有 Azure VM：
+1. 在“Cloud Shell”窗格的 PowerShell 会话中，运行以下命令以停止和解除分配本实验室中创建的所有 Azure VM：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG' | Stop-AzVM -NoWait -Force
