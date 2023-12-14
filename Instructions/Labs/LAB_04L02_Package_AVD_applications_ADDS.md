@@ -452,9 +452,9 @@ lab:
    |---|---|
    |MSIX 映像路径|\\\\\<storage-account-name\>.file.core.windows.net\\az140-42-msixvhds\\XmlNotepad.vhd****，其中占位符 `<storage-account-name>` 指定了托管 az140-42-msixvhds**** 文件共享的存储帐户的名称|
    |MSIX 包|包创建期间生成的名称|
-   |Display name|XML Notepad****|
+   |显示名称|XML Notepad****|
    |登记类型|点播****|
-   |State|**活动**|
+   |状态|**活动**|
 
 #### 任务 4：将 MSIX 应用发布到应用程序组
 
@@ -487,7 +487,7 @@ lab:
    |应用程序源|**MSIX 包**|
    |MSIX 包|表示包含在映像中的包的名称|
    |应用程序名称|XML Notepad****|
-   |Display name|XML Notepad****|
+   |显示名称|XML Notepad****|
    |说明|XML Notepad****|
 
 #### 任务 5：验证 MSIX 应用附加的功能

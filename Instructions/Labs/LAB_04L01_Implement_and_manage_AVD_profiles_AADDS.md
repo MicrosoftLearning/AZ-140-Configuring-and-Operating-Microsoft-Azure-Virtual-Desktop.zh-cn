@@ -60,7 +60,7 @@ lab:
    >**备注**：等到 Azure VM 开始运行后再继续执行下一步操作。
    
       
-1. 从“Cloud Shell”**** 窗格中的 PowerShell 会话运行以下命令，以在会话主机上启用 PowerShell 远程处理。
+1. 从“Cloud Shell”**** 窗格的 PowerShell 会话中运行以下命令，在会话主机上启用 PowerShell 远程处理。
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21a-RG' | Enable-AzVMPSRemoting

@@ -245,7 +245,7 @@ lab:
    |VM 映像定义名称|az140-25-host-image****|
    |Publisher|**MicrosoftWindowsDesktop**|
    |产品/服务|office-365****|
-   |SKU|20h1-evd-o365pp****|
+   |SKU|win11-22h2-avd-m365****|
 
 1. 在“创建映像”**** 边栏选项卡的“基本信息”**** 选项卡上，指定以下设置并选择“查看 + 创建”****：
 

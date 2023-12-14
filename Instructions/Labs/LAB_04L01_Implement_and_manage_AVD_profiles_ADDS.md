@@ -89,7 +89,7 @@ lab:
    Install-Module -Name Az -AllowClobber -SkipPublisherCheck
    ```
 
-1. 在“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以修改执行策略：
+1. 从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以修改执行策略：
 
    ```powershell
    Set-ExecutionPolicy RemoteSigned -Force
@@ -202,8 +202,8 @@ lab:
 8. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“运行”****，在“运行”**** 对话框的“打开”**** 文本框中，键入“cmd”****，然后选择“确定”**** 以启动“命令提示符”**** 窗口：
 9. 验证“命令提示符”**** 窗口设置是否与之前在此任务中配置的设置匹配。
 10. 在 SessionDesktop**** 会话中，最小化所有窗口，右键单击桌面，在右键单击菜单中，选择“新建”****，然后在级联菜单中选择“快捷方式”****。 
-11. 在“创建快捷方式”**** 向导的“要为哪个项目创建创建快捷方式?”**** 页中，在“键入项目位置”**** 文本框中，键入“笔记本”**** 并选择“下一步”****。
-12. 在“创建快捷方式”**** 向导的“想要如何命名快捷方式”**** 页中，在“为此快捷方式键入名称”**** 文本框中键入“笔记本”**** 并选择“完成”****。
+11. 在“创建快捷方式”**** 向导的“想为哪个项目创建快捷方式?”**** 页的“请键入项目的位置”**** 文本框中，键入“Notepad”**** 并选择“下一步”****。
+12. 在“创建快捷方式”**** 向导的“想将快捷方式命名为什么”**** 页中，在“键入该快捷方式的名称”**** 文本框中键入“Notepad”**** 并选择“完成”****。
 13. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“关闭或注销”****，然后在级联菜单中，选择“注销”****。
 14. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口的应用程序列表中，双击“SessionDesktop”****，以启动新的远程桌面会话。 
 15. 在 SessionDesktop**** 会话中，验证记事本**** 快捷方式是否显示在桌面上。
@@ -224,13 +224,13 @@ lab:
 #### 任务 1：解除分配在实验室中预配和使用的 Azure VM
 
 1. 切换到实验室计算机，然后在显示 Azure 门户的 Web 浏览器窗口中，打开 Cloud Shell 窗格内的“PowerShell”shell 会话 。
-1. 在“Cloud Shell”窗格的 PowerShell 会话中运行以下命令，以列出本实验室中创建和使用的所有 Azure VM：
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以列出本实验室中创建的所有 Azure VM：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG'
    ```
 
-1. 在“Cloud Shell”窗格的 PowerShell 会话中运行以下命令，以停止和解除分配本实验室中创建和使用的所有 Azure VM：
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以停止和解除分配本实验室中创建和使用的所有 Azure VM：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG' | Stop-AzVM -NoWait -Force

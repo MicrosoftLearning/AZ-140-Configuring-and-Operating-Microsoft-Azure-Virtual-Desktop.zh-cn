@@ -10,7 +10,7 @@ lab:
 ## 实验室依赖项
 
 - 本实验室将使用的 Azure 订阅。
-- Microsoft 帐户或 Microsoft Entra 帐户，该帐户在本实验室将使用的 Azure 订阅中具有所有者或参与者角色，并在与该 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色。
+- Microsoft 帐户或 Microsoft Entra 帐户，该帐户在本实验室将会使用的 Azure 订阅中具有所有者或参与者角色，在与该 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色。
 - 已完成实验室“准备部署 Azure 虚拟桌面 (AD DS)”
 
 ## 预计用时

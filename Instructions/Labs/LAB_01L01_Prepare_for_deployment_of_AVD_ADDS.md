@@ -181,7 +181,7 @@ lab:
 
 > **注意**：请确保浏览器已启用弹出窗口功能。
 
-1. 在显示 Azure 门户的浏览器窗口中，打开另一个标签页并在其中导航到 [Azure 门户](https://portal.azure.com)。
+1. 在显示 Azure 门户的浏览器窗口中，打开另一个选项卡，并在浏览器选项卡中导航到 [Azure 门户](https://portal.azure.com)。
 1. 在 Azure 门户中，通过选择搜索文本框右侧的“工具栏”图标，打开“Cloud Shell”窗格。
 1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以将名为 AzureBastionSubnet 的子网添加到你在本练习前面创建的虚拟网络 az140-adds-vnet11 中 ：
 

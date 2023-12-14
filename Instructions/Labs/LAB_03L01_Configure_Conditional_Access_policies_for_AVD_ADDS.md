@@ -141,7 +141,7 @@ lab:
 1. 在“Microsoft Entra Connect”**** 窗口中的“连接目录”**** 页上，选择“下一步”****。
 1. 在“Microsoft Entra Connect”**** 窗口的“域和 OU 筛选”**** 页上，确保选中“同步所选域和 OU”**** 选项，展开“adatum.com”**** 节点，确保选中“ToSync”**** OU 旁边的复选框，选择“WVDClients”**** OU 旁边的复选框，然后选择“下一步”****。
 1. 在“Microsoft Entra Connect”**** 窗口的“可选功能”**** 页上接受默认设置，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“准备配置”**** 页上，确保选中“配置完成后启动同步过程”**** 复选框，然后选择“配置”****。
+1. 在“Microsoft Entra Connect”**** 窗口中的“准备好进行配置”**** 页上，确保未选中“配置完成后启动同步过程”**** 复选框，然后选择“配置”****。
 1. 查看“配置完成”**** 页上的信息，然后选择“退出”**** 关闭“Microsoft Entra Connect”**** 窗口。
 
 #### 任务 5：触发 Microsoft Entra Connect 增量同步
@@ -154,7 +154,7 @@ lab:
    Start-ADSyncSyncCycle -PolicyType Initial
    ```
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在与此实验室使用的 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色的用户帐户的 Microsoft Entra 凭据登录。
+1. 在与 az140-dc-vm11**** 的 Bastion 会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在与本实验室所用订阅关联的 Microsoft Entra 租户中具有全局管理员角色的用户帐户的 Microsoft Entra 凭据登录。
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“Azure Active Directory”**** 以导航到与此实验室使用的 Azure 订阅关联的 Microsoft Entra 租户。
 1. 在“Azure Active Directory”边栏选项卡的左侧垂直菜单栏中，在“管理”**** 部分单击“设备”****。 
 1. 在“设备 | 所有设备”**** 边栏选项卡上，查看设备列表，验证 az140-cl-vm11**** 设备是否在“联接类型”**** 列中列出“已建立混合 Microsoft Entra 联接”**** 条目。
@@ -261,7 +261,7 @@ lab:
 #### 任务 1：解除分配在实验室中预配和使用的 Azure VM
 
 1. 切换到实验室计算机，然后在显示 Azure 门户的 Web 浏览器窗口中，打开 Cloud Shell 窗格内的“PowerShell”shell 会话 。
-1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以列出本实验室中创建和使用的所有 Azure VM：
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以列出本实验室中创建的所有 Azure VM：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG'
