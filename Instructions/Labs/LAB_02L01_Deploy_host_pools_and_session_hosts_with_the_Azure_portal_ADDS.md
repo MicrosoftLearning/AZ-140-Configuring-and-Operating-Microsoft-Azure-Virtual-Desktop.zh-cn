@@ -1,40 +1,40 @@
 ---
 lab:
   title: 实验室：使用 Azure 门户部署主机池和会话主机 (AD DS)
-  module: 'Module 2: Implement a AVD Infrastructure'
+  module: 'Module 2: Implement an AVD Infrastructure'
 ---
 
-# <a name="lab---deploy-host-pools-and-session-hosts-by-using-the-azure-portal-ad-ds"></a>实验室 - 使用 Azure 门户部署主机池和会话主机 (AD DS)
-# <a name="student-lab-manual"></a>学生实验室手册
+# 实验室 - 使用 Azure 门户部署主机池和会话主机 (AD DS)
+# 学生实验室手册
 
-## <a name="lab-dependencies"></a>实验室依赖项
+## 实验室依赖项
 
 - 本实验室将使用的 Azure 订阅。
-- 一个 Microsoft 帐户或 Azure AD 帐户，该帐户具有将在本实验室中使用的 Azure 订阅的所有者或参与者角色，以及与 Azure 订阅关联的 Azure AD 租户的全局管理员角色。
+- Microsoft 帐户或 Microsoft Entra 帐户，该帐户在本实验室将会使用的 Azure 订阅中具有所有者或参与者角色，在与该 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色。
 - 已完成实验室“准备部署 Azure 虚拟桌面 (AD DS)”
 
-## <a name="estimated-time"></a>预计用时
+## 预计用时
 
 60 分钟
 
-## <a name="lab-scenario"></a>实验室方案
+## 实验室方案
 
 你需要在 Active Directory 域服务 (AD DS) 环境中创建和配置主机池和会话主机。
 
-## <a name="objectives"></a>目标
+## 目标
   
 完成本实验室后，你将能够：
 
 - 在 AD DS 域中实现 Azure 虚拟桌面环境
 - 在 AD DS 域中验证 Azure 虚拟桌面环境
 
-## <a name="lab-files"></a>实验室文件 
+## 实验室文件
 
 - 无
 
-## <a name="instructions"></a>说明
+## 说明
 
-### <a name="exercise-1-implement-an-azure-virtual-desktop-environment-in-an-ad-ds-domain"></a>练习 1：在 AD DS 域中实现 Azure 虚拟桌面环境
+### 练习 1：在 AD DS 域中实现 Azure 虚拟桌面环境
   
 此练习的主要任务如下：
 
@@ -44,7 +44,7 @@ lab:
 1. 配置 Azure 虚拟桌面应用程序组
 1. 配置 Azure 虚拟桌面工作区
 
-#### <a name="task-1-prepare-ad-ds-domain-and-the-azure-subscription-for-deployment-of-an-azure-virtual-desktop-host-pool"></a>任务 1：准备 AD DS 域和 Azure 订阅，以部署 Azure 虚拟桌面主机池
+#### 任务 1：准备 AD DS 域和 Azure 订阅，以部署 Azure 虚拟桌面主机池
 
 1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户]( )，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
 1. 在 Azure 门户中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-dc-vm11”  。
@@ -84,7 +84,7 @@ lab:
    Register-AzResourceProvider -ProviderNamespace Microsoft.DesktopVirtualization
    ```
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室使用的订阅中具有所有者角色的用户帐户的 Azure AD 凭据登录。
+1. 在与 az140-dc-vm11 的远程桌面会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室所用订阅中具有所有者角色的用户帐户的 Microsoft Entra 凭据登录。
 1. 在与 az140-dc-vm11 的远程桌面会话中，在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”文本框，搜索并导航到“虚拟网络”，然后在“虚拟网络”边栏选项卡中选择“az140-adds-vnet11”    。 
 1. 在“az140-adds-vnet11”边栏选项卡上，选择“子网”，在“子网”边栏选项卡中选择“+ 子网”，在“添加子网”边栏选项卡上，指定以下设置（所有其他设置保留默认值），并单击“保存”     ：
 
@@ -93,7 +93,7 @@ lab:
    |名称|hp1-Subnet|
    |子网地址范围|**10.0.1.0/24**|
 
-#### <a name="task-2-deploy-an-azure-virtual-desktop-host-pool"></a>任务 2：部署 Azure 虚拟桌面主机池
+#### 任务 2：部署 Azure 虚拟桌面主机池
 
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口，搜索并选择“Azure 虚拟桌面”，在“Azure 虚拟桌面”边栏选项卡上，选择“主机池”，在“Azure 虚拟桌面 \| 主机池”边栏选项卡上，选择“+ 创建”     。 
 1. 在“创建主机池”边栏选项卡的“基本信息”选项卡上，指定以下设置并选择“下一步:  虚拟机 >”（其他设置保留默认值）：
@@ -108,7 +108,7 @@ lab:
    |首选应用组类型|**桌面**|
    |主机池类型|**池**|
    |负载均衡算法|**广度优先**|
-   |最大会话限制|**50**|
+   |最大会话限制|**12**|
 
 1. 在“创建主机池”边栏选项卡的“虚拟机”选项卡中，指定以下设置并选择“下一步:  工作区 >”（其他设置保留默认值）：
 
@@ -149,7 +149,7 @@ lab:
 
    > 备注：请等待部署完成。 这可能需要大约 10 分钟。
 
-#### <a name="task-3-manage-the-azure-virtual-desktop-host-pool-session-hosts"></a>任务 3：管理 Azure 虚拟桌面主机池会话主机
+#### 任务 3：管理 Azure 虚拟桌面主机池会话主机
 
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Web 浏览器窗口中，搜索并选择“Azure 虚拟桌面”，在“Azure 虚拟桌面”边栏选项卡上，在垂直菜单栏的“管理部分”中，选择“主机池”    。
 1. 在“Azure 虚拟桌面 \| 主机池”边栏选项卡的主机池列表中，选择“az140-21-hp1” 。
@@ -183,17 +183,17 @@ lab:
 
    > **注意**：正如你可能注意到的，在将会话主机添加到现有池时，可以更改 VM 的映像和前缀。 通常，除非计划替换池中的所有 VM，否则不建议这样做。 
 
-1. 在“将虚拟机添加到主机池”边栏选项卡的“查看 + 创建”选项卡中，选择“创建”  
+1. 在“将虚拟机添加到主机池”边栏选项卡的“查看 + 创建”选项卡中，选择“创建”
 
    > **注意**：在继续下一个任务之前，请等待部署完成。 部署可能需要大约 5 分钟时间。 
 
-#### <a name="task-4-configure-azure-virtual-desktop-application-groups"></a>任务 4：配置 Azure 虚拟桌面应用程序组
+#### 任务 4：配置 Azure 虚拟桌面应用程序组
 
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Web 浏览器窗口中，搜索并选择“Azure 虚拟桌面”，在“Azure 虚拟桌面”边栏选项卡上，选择“应用程序组”   。
 1. 在“Azure 虚拟桌面 \| 应用程序组”边栏选项卡上，注意现有的自动生成的 az140-21-hp1-DAG 桌面应用程序组，并选择它 。 
 1. 在“az140-21-hp1-DAG”边栏选项卡中，选择“分配” 。
 1. 在“az140-21-hp1-DAG \| 分配”边栏选项卡上，选择“+ 添加” 。
-1. 在“选择 Azure AD 用户或用户组”边栏选项卡上，选择“az140-wvd-pooled”，然后单击“选择”  。
+1. 在“选择 Microsoft Entra 用户或用户组”**** 边栏选项卡上，选择“az140-wvd-pooled”****，然后单击“选择”****。
 1. 导航回“Azure 虚拟桌面 \| 应用程序组”边栏选项卡，选择“+ 创建” 。 
 1. 在“创建应用程序组”边栏选项卡的“基本信息”选项卡中，指定以下设置并选择“下一步:  应用程序 >”：
 
@@ -236,8 +236,8 @@ lab:
    |需要命令行|**否**|
 
 1. 返回“创建应用程序组”边栏选项卡的“应用程序”选项卡，选择“下一步:  分配 >”。
-1. 在“创建应用程序组”边栏选项卡的“分配”选项卡中，选择“+ 添加 Azure AD 用户或用户组”  。
-1. 在“选择 Azure AD 用户或用户组”边栏选项卡上，选择“az140-wvd-remote-app”，然后单击“选择”  。
+1. 在“创建应用程序组”**** 边栏选项卡的“分配”**** 选项卡上，选择“+ 添加 Microsoft Entra 用户或用户组”****。
+1. 在“选择 Microsoft Entra 用户或用户组”**** 边栏选项卡上，选择“az140-wvd-remote-app”****，然后单击“选择”****。
 1. 返回“创建应用程序组”边栏选项卡的“分配”选项卡中，选择“下一步:  工作区 >”。
 1. 在“创建工作区”边栏选项卡的“工作区”选项卡中，指定以下设置并选择“查看 + 创建”  ：
 
@@ -278,8 +278,8 @@ lab:
    |需要命令行|**否**|
 
 1. 返回“创建应用程序组”边栏选项卡的“应用程序”选项卡，选择“下一步:  分配 >”。
-1. 在“创建应用程序组”边栏选项卡的“分配”选项卡中，选择“+ 添加 Azure AD 用户或用户组”  。
-1. 在“选择 Azure AD 用户或用户组”边栏选项卡上，选择“az140-wvd-remote-app”和“az140-wvd-admins”，然后单击“选择”   。
+1. 在“创建应用程序组”**** 边栏选项卡的“分配”**** 选项卡上，选择“+ 添加 Microsoft Entra 用户或用户组”****。
+1. 在“选择 Microsoft Entra 用户或用户组”**** 边栏选项卡上，选择“az140-wvd-remote-app”**** 和“az140-wvd-admins”****，然后单击“选择”****。
 1. 返回“创建应用程序组”边栏选项卡的“分配”选项卡中，选择“下一步:  工作区 >”。
 1. 在“创建工作区”边栏选项卡的“工作区”选项卡中，指定以下设置并选择“查看 + 创建”  ：
 
@@ -289,7 +289,7 @@ lab:
 
 1. 在“创建应用程序组”边栏选项卡的“查看 + 创建”选项卡中，选择“创建”  。
 
-#### <a name="task-5-configure-azure-virtual-desktop-workspaces"></a>任务 5：配置 Azure 虚拟桌面工作区
+#### 任务 5：配置 Azure 虚拟桌面工作区
 
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“Azure 虚拟桌面”，在“Azure 虚拟桌面”边栏选项卡上，选择“工作区”   。
 1. 在“Azure 虚拟桌面 \| 工作区”边栏选项卡上，选择“+ 创建” 。 
@@ -314,7 +314,7 @@ lab:
 1. 返回到“创建工作区”边栏选项卡中的“应用程序组”选项卡，选择“查看 + 创建”  。
 1. 在“创建工作区”边栏选项卡的“查看 + 创建”选项卡中，选择“创建”  。
 
-### <a name="exercise-2-validate-azure-virtual-desktop-environment"></a>练习 2：验证 Azure 虚拟桌面环境
+### 练习 2：验证 Azure 虚拟桌面环境
   
 此练习的主要任务如下：
 
@@ -322,7 +322,7 @@ lab:
 1. 订阅 Azure 虚拟桌面工作区
 1. 测试 Azure 虚拟桌面应用
 
-#### <a name="task-1-install-microsoft-remote-desktop-client-msrdc-on-a-windows-10-computer"></a>任务 1：在 Windows 10 计算机上安装 Microsoft 远程桌面客户端 (MSRDC)
+#### 任务 1：在 Windows 10 计算机上安装 Microsoft 远程桌面客户端 (MSRDC)
 
 1. 在与 az140-dc-vm11 的远程桌面会话中，在显示 Azure 门户的浏览器窗口中，搜索并选择“虚拟机”，并在“虚拟机”边栏选项卡上，选择“az140-cl-vm11”条目   。
 1. 在“az140-cl-vm11”边栏选项卡上，向下滚动到“操作”部分，然后选择“运行命令”  。 
@@ -349,7 +349,7 @@ lab:
 1. 在与 az140-cl-vm11 的远程桌面会话中，启动 Microsoft Edge，并导航到 [Windows 桌面客户端下载页](https://go.microsoft.com/fwlink/?linkid=2068602)，然后在出现提示时，选择“运行”以启动安装 。 在“远程桌面安装”向导的“安装范围”页上，选择“为此计算机的所有用户安装”选项，然后单击“安装”   。 如果用户帐户控制提示输入管理凭据，请使用 ADATUM\\Student 用户名并将 Pa55w.rd1234 作为密码进行身份验证 。
 1. 安装完成后，请确保“安装完成时启动远程桌面”复选框处于选中状态，然后单击“完成”以启动“远程桌面客户端” 。
 
-#### <a name="task-2-subscribe-to-a-azure-virtual-desktop-workspace"></a>任务 2：订阅 Azure 虚拟桌面工作区
+#### 任务 2：订阅 Azure 虚拟桌面工作区
 
 1. 在“远程桌面”客户端窗口中，选择“订阅”，然后在出现提示时，通过提供之前在本实验室中标识的 userPrincipalName 和在创建此帐户时设置的密码，使用 aduser1 凭据进行登录  。
 
@@ -358,7 +358,7 @@ lab:
 1. 如果收到提示，在“保持登录到所有应用”窗口中，清除“允许组织管理我的设备”复选框，然后选择“否，仅登录到此应用”  。 
 1. 确保“远程桌面”页显示发布到工作区的应用程序组中包含的且通过其组成员资格与用户帐户 aduser1 关联的应用程序列表 。 
 
-#### <a name="task-3-test-azure-virtual-desktop-apps"></a>任务 3：测试 Azure 虚拟桌面应用
+#### 任务 3：测试 Azure 虚拟桌面应用
 
 1. 在与 az140-cl-vm11 的远程桌面会话中，在“远程桌面”客户端窗口的应用程序列表中，双击“命令提示符”，然后验证其是否启动了“命令提示符”窗口   。 提示进行身份验证时，输入在创建 aduser1 用户帐户时设置的密码，选中“记住我”复选框，然后选择“确定”  。
 
@@ -376,7 +376,7 @@ lab:
 1. 在“默认桌面”会话的命令提示符下，键入“主机名”并按 Enter 键以显示运行远程桌面会话的计算机的名称  。
 1. 验证显示的名称是否为 az140-21-p1-0、az140-21-p1-1 或 az140-21-p1-2  。
 
-### <a name="exercise-3-stop-and-deallocate-azure-vms-provisioned-in-the-lab"></a>练习 3：停止并解除分配在实验室中预配的 Azure VM
+### 练习 3：停止并解除分配在实验室中预配的 Azure VM
 
 此练习的主要任务如下：
 
@@ -384,7 +384,7 @@ lab:
 
 >**注意**：在此练习中，你将解除分配此实验室中预配的 Azure VM，以最大程度减少相应的计算费用
 
-#### <a name="task-1-deallocate-azure-vms-provisioned-in-the-lab"></a>任务 1：解除分配在实验室中预配的 Azure VM
+#### 任务 1：解除分配在实验室中预配的 Azure VM
 
 1. 切换到实验室计算机，然后在显示 Azure 门户的 Web 浏览器窗口中，打开 Cloud Shell 窗格内的“PowerShell”shell 会话 。
 1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以列出本实验室中创建的所有 Azure VM：
