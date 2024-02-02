@@ -73,7 +73,7 @@ lab:
 
 #### 任务 2：部署 Azure Bastion 
 
-> 注意：Azure Bastion 允许在没有公共终结点（你在本练习的上一个任务中部署的终结点）的情况下连接到 Azure VM，同时提供针对暴力攻击（利用操作系统级别凭据）的保护。
+> **注意**：Azure Bastion 允许在没有公共终结点（你在本练习的上一个任务中部署的终结点）的情况下连接到 Azure VM，同时提供针对暴力攻击（利用操作系统级别凭据）的保护。
 
 > **注意**：请确保浏览器已启用弹出窗口功能。
 
@@ -243,7 +243,7 @@ lab:
    |设置|“值”|
    |---|---|
    |VM 映像定义名称|az140-25-host-image****|
-   |Publisher|**MicrosoftWindowsDesktop**|
+   |发布者|**MicrosoftWindowsDesktop**|
    |产品/服务|office-365****|
    |SKU|win11-22h2-avd-m365****|
 
