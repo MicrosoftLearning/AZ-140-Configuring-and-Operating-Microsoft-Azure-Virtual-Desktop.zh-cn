@@ -38,7 +38,7 @@ lab:
 
 ## 说明
 
->**重要说明**：Microsoft 已将 Azure Active Directory**** (Azure AD****) 重命名为 Microsoft Entra ID****。 有关此更改的详细信息，请参阅 [Azure Active Directory 的新名称](https://learn.microsoft.com/en-us/entra/fundamentals/new-name)。 这是一项持续的工作，因此，当你逐步完成各个练习时，你可能仍然会遇到实验室说明与界面元素不匹配的情况。 请考虑这一点（具体说来，在本实验室中，Microsoft Entra Connect**** 指定了 Azure Active Directory Connect**** 的新名称）。
+>**重要说明**：Microsoft 已将 Azure Active Directory (Azure AD) 重命名为 Microsoft Entra ID。************ 有关此更改的详细信息，请参阅 [Azure Active Directory 的新名称](https://learn.microsoft.com/en-us/entra/fundamentals/new-name)。 这是一项持续的工作，因此，当你逐步完成各个练习时，你可能仍然会遇到实验室说明与界面元素不匹配的情况。 请考虑这一点（具体说来，在本实验室中，Microsoft Entra Connect**** 指定了 Azure Active Directory Connect**** 的新名称）。
 
 ### 练习 1：准备和创建 MSIX 应用包
 
