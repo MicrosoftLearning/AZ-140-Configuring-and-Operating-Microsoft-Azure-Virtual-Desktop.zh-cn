@@ -38,6 +38,8 @@ lab:
 
 ## 说明
 
+>**重要说明**：Microsoft 已将 Azure Active Directory (Azure AD) 重命名为 Microsoft Entra ID。************ 有关此更改的详细信息，请参阅 [Azure Active Directory 的新名称](https://learn.microsoft.com/en-us/entra/fundamentals/new-name)。 这是一项持续的工作，因此，当你逐步完成各个练习时，你可能仍然会遇到实验室说明与界面元素不匹配的情况。 请考虑这一点（具体说来，在本实验室中，Microsoft Entra Connect**** 指定了 Azure Active Directory Connect**** 的新名称）。
+
 ### 练习 1：准备和创建 MSIX 应用包
 
 此练习的主要任务如下：
@@ -464,18 +466,17 @@ lab:
 1. 在“Azure 虚拟桌面 \| 应用程序组”边栏选项卡上，选择“az140-21-hp1-Utilities-RAG”应用程序组条目********。
 1. 在“az140-21-hp1-Utilities-RAG”**** 边栏选项卡上的左侧垂直菜单中的“管理”**** 部分中，选择“应用程序”****。 
 1. 在“az140-21-hp1-Utilities-RAG \| 应用程序”**** 边栏选项卡上，单击“+ 添加”****。
-1. 在“添加应用程序”边栏选项卡上，指定以下设置并选择“保存” ：
+1. 在“添加应用程序”边栏选项卡的“基本信息”和“图标”选项卡上指定以下设置，然后选择“保存”****************：
 
    |设置|值|
    |---|---|
-   |应用程序源|**MSIX 包**|
-   |MSIX 包|表示映像中包含的包的名称|
-   |MSIX 应用程序|XMLNOTEPAD****|
-   |应用程序名称|XML Notepad****|
+   |应用程序源|应用附加****|
+   |程序包|表示包含在映像中的包的名称|
+   |应用程序|XMLNOTEPAD****|
+   |申请标识符|XML Notepad****|
    |显示名称|XML Notepad****|
    |说明|XML Notepad****|
-   |图标路径|**C:\\Program Files\\WindowsApps\\XmlNotepad_2.8.0.0_x64__4vm7ty4fw38e8\\VFS\\ProgramFilesX86\\LovettSoftware\\XmlNotepad\\XmlNotepad.exe**|
-   |图标索引|**0**|
+   |图标源|**默认值**|
 
 1. 导航回“Azure 虚拟桌面 \| 应用程序组”边栏选项卡，选择“az140-21-hp1-DAG”应用程序组条目********。
 1. 在“az140-21-hp1-DAG”**** 边栏选项卡上的左侧垂直菜单中的“管理”**** 部分中，选择“应用程序”****。 
