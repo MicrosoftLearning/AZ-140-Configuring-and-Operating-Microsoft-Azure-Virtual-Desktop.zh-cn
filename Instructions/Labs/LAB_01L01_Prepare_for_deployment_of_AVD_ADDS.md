@@ -1,7 +1,7 @@
 ---
 lab:
   title: 实验室：准备部署 Azure 虚拟桌面 (AD DS)
-  module: 'Module 1: Plan a AVD Architecture'
+  module: 'Module 1: Plan an AVD Architecture'
 ---
 
 # 实验室 - 准备部署 Azure 虚拟桌面 (AD DS)
