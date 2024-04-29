@@ -41,15 +41,15 @@ lab:
 
 1. 准备使用 PowerShell 部署 Azure 虚拟桌面主机池
 1. 使用 PowerShell 创建 Azure 虚拟桌面主机池
-1. 使用 PowerShell 为运行 Windows 10 企业版的 Azure VM 执行基于模板的部署
-1. 使用 PowerShell 将运行 Windows 10 企业版的 Azure VM 作为会话主机添加到 Azure 虚拟桌面主机池
+1. 使用 PowerShell 对运行 Windows 11 企业版的 Azure VM 执行基于模板的部署
+1. 使用 PowerShell 将运行 Windows 11 企业版的 Azure VM 作为会话主机添加到 Azure 虚拟桌面主机
 1. 验证 Azure 虚拟桌面会话主机的部署
 
 #### 任务 1：准备使用 PowerShell 部署 Azure 虚拟桌面主机池
 
 1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
 1. 在 Azure 门户中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-dc-vm11”  。
-1. 在“az140-dc-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-dc-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
+1. 在“az140-dc-vm11”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
@@ -58,18 +58,6 @@ lab:
    |密码|**Pa55w.rd1234**|
 
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****。
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以标识名为“WVDInfra”**** 的组织单位的可分辨名称，该组织单位将托管 Azure 虚拟桌面池会话主机的计算机对象：
-
-   ```powershell
-   (Get-ADOrganizationalUnit -Filter "Name -eq 'WVDInfra'").distinguishedName
-   ```
-
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格运行以下命令以标识“ADATUM\\Student”**** 帐户（该帐户用于将 Azure 虚拟桌面主机添加到 AD DS 域）的 UPN 后缀 (student@adatum.com****)：
-
-   ```powershell
-   (Get-ADUser -Filter {sAMAccountName -eq 'student'} -Properties userPrincipalName).userPrincipalName
-   ```
-
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员:  Windows PowerShell ISE”**** 脚本窗格运行以下命令，以安装 DesktopVirtualization PowerShell 模块（如果出现提示，请单击“全是”****）：
 
    ```powershell
@@ -87,21 +75,8 @@ lab:
    |名称|hp3-Subnet****|
    |子网地址范围|**10.0.3.0/24**|
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”**** 文本框搜索并导航到“网络安全组”****，然后在“网络安全组”**** 边栏选项卡上选择“az140-11-RG”**** 资源组中的安全组。
-1. 在“网络安全组”边栏选项卡上的左侧垂直菜单中，在“设置”**** 部分中，单击“属性”****。
-1. 在“属性”**** 边栏选项卡上，单击“资源 ID”**** 文本框右侧的“复制到剪贴板”**** 图标。 
-
-   > **备注**：该值的格式应类似于 `/subscriptions/de8279a3-0675-40e6-91e2-5c3728792cb5/resourceGroups/az140-11-RG/providers/Microsoft.Network/networkSecurityGroups/az140-cl-vm11-nsg`，尽管订阅 ID 会有所不同。 请将其记录下来，因为会在下一个任务中用到它。
-
 #### 任务 2：使用 PowerShell 创建 Azure 虚拟桌面主机池
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格运行以下命令，以登录到 Azure 订阅：
-
-   ```powershell
-   Connect-AzAccount
-   ```
-
-1. 如果出现提示，请提供具有本实验室所用订阅的所有者角色的用户帐户的凭据。
 1. 在与 **az140-dc-vm11** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以标识托管 Azure 虚拟网络“az140-adds-vnet11”**** 的 Azure 区域：
 
    ```powershell
@@ -139,7 +114,7 @@ lab:
    New-AzRoleAssignment -ObjectId $aadGroupObjectId -RoleDefinitionName $roleDefinitionName -ResourceName $dagAppGroupName -ResourceGroupName $resourceGroupName -ResourceType 'Microsoft.DesktopVirtualization/applicationGroups'
    ```
 
-#### 任务 3：使用 PowerShell 为运行 Windows 10 企业版的 Azure VM 执行基于模板的部署
+#### 任务 3：使用 PowerShell 对运行 Windows 11 企业版的 Azure VM 执行基于模板的部署
 
 1. 从实验室计算机导航到已部署的存储帐户。 在“文件共享”边栏选项卡上，选择 az140-22-profiles 文件共享****。
 
@@ -147,7 +122,7 @@ lab:
 
 1. 在与 az140-dc-vm11 的 Bastion 会话中，打开文件资源管理器并导航到先前配置的 Z:，或分配给文件共享连接的驱动器号****。 将上传的部署文件复制到 C：\AllFiles\Labs\02****。
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以部署运行 Windows 10 企业版（多会话）的 Azure VM，该 VM 将用作在此前任务中创建的主机池中的 Azure 虚拟桌面会话主机：
+1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******Windows PowerShell ISE**控制台，运行以下命令部署运行 Windows 11 企业版（多会话）的 Azure VM，该 VM 将用作在前面的任务中创建的主机池中的 Azure 虚拟桌面会话主机：
 
    ```powershell
    $resourceGroupName = 'az140-24-RG'
@@ -160,7 +135,7 @@ lab:
      -TemplateParameterFile C:\AllFiles\Labs\02\az140-24_azuredeployhp3.parameters.json
    ```
 
-   > 注意：在继续下一个任务之前，请等待部署完成。 这可能需要大约 5 分钟。 
+   > 注意：在继续下一个任务之前，请等待部署完成。 这可能需要大约 5-10 分钟。 
 
    > **备注**：该部署会使用 Azure 资源管理器模板来预配 Azure VM，并应用可自动将操作系统添加到 adatum.com**** AD DS 域的 VM 扩展。
 
@@ -170,10 +145,13 @@ lab:
    Get-ADComputer -Filter "sAMAccountName -eq 'az140-24-p3-0$'"
    ```
 
-#### 任务 4：使用 PowerShell 将运行 Windows 10 企业版的 Azure VM 作为主机添加到 Azure 虚拟桌面主机池
+#### 任务 4：使用 PowerShell 将运行 Windows 11 企业版的 Azure VM 作为主机添加到 Azure 虚拟桌面主机池
 
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，在显示 Azure 门户的浏览器窗口中，搜索并选择“虚拟机”****，然后在“虚拟机”**** 边栏选项卡的虚拟机列表中选择“az140-24-p3-0”****。
-1. 在“az140-24-p3-0”边栏选项卡中，选择“连接”，在下拉菜单中选择“RDP”，在“az140-24-p3-0 \| 连接”边栏选项卡上的“IP 地址”下拉列表中，选择“专用 IP 地址(10.0.3.4)”条目，然后选择“下载 RDP 文件”********************************。
+1. 在“az140-24-p3-0”边栏选项卡上，选择“连接”，在下拉菜单中选择“连接”************。
+1. 确保**连接使用**显示**专用 IP 地址 | 10.0.3.4**
+1. 在**本机 RDP**部分中，选择“下载 RDP 文件”****。
+1. 如果出现提示，请选择“保留”，然后点击下载的**az140-24-p3-0.rdp**文件****。
 1. 系统出现提示时，请使用以下凭据登录：
 
    |设置|值|
@@ -203,29 +181,22 @@ lab:
    $webClient.DownloadFile($wvdBootLoaderInstallerURL,"$labFilesFolder/$wvdBootLoaderInstallerName")
    ```
 
-1. 在与 az140-24-p3-0**** 的远程桌面会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格运行以下命令，以安装最新版本的 PowerShellGet 模块（如果提示确认，请选择“是”****）：
+1. 在“管理员:**Windows PowerShell ISE**控制台，运行以下命令以安装最新版本的 Az PowerShell 模块，当提示安装 NuGet 提供程序时，请按**Y**：
 
    ```powershell
-   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-   Install-Module -Name PowerShellGet -Force -SkipPublisherCheck
+   Install-Module -Name Az -Force
    ```
 
-1. 从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以安装最新版本的 Az.DesktopVirtualization PowerShell 模块：
+   > **注意**：可能需要等待 3-5 分钟，然后才会显示 Az 模块安装的任何输出。 在输出停止**后**，可能需要再等待 5 分钟。 这是预期的行为。
+
+1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
 
    ```powershell
-   Install-Module -Name Az.DesktopVirtualization -AllowClobber -Force
-   Install-Module -Name Az -AllowClobber -Force
-   ```
-
-1. 从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以修改 PowerShell 执行策略并登录到 Azure 订阅：
-
-   ```powershell
-   Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
    Connect-AzAccount
    ```
 
 1. 如果出现提示，请提供具有本实验室所用订阅的所有者角色的用户帐户的凭据。
-1. 在与 az140-24-p3-0**** 的远程桌面会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以生成将新会话主机添加到此前在本练习中预配的池中所需的令牌：
+1. 在与 az140-24-p3-0 的远程桌面会话中，从“管理员: ******Windows PowerShell ISE**控制台，运行以下命令以生成将此会话主机加入在本练习前面配置的池中所需的令牌：
 
    ```powershell
    $resourceGroupName = 'az140-24-RG'
@@ -246,6 +217,8 @@ lab:
    ```powershell
    Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $wvdBootLoaderInstallerName", "/quiet", "/qn", "/norestart", "/passive", "/l* $labFilesFolder\BootLoaderInstall.log" | Wait-process
    ```
+
+1. 在**az140-24-p3-0**的远程桌面会话中，右击“开始”，在右击菜单中，选择“关闭或注销”，然后在级联菜单中点击“注销”************。
 
 #### 任务 5：验证 Azure 虚拟桌面主机的部署
 
