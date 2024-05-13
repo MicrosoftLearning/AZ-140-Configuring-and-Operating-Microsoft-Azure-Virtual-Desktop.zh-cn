@@ -12,8 +12,8 @@ lab:
 - Azure 订阅
 - Microsoft 帐户或 Microsoft Entra 帐户，在与 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色并在 Azure 订阅中具有所有者或参与者角色
 - 已完成实验室“准备部署 Azure 虚拟桌面 (AD DS)”
-- 已完成实验室“Azure 虚拟桌面配置文件管理 (AD DS)”****
-- 已完成实验室“为 WVD (AD DS) 配置条件访问策略”****
+- 已完成实验室“为 AVD (AD DS) 配置条件访问策略”****
+- 完成的实验室**实现和管理 AVD 配置文件 (AD DS)**
 
 ## 预计用时
 
@@ -28,8 +28,8 @@ lab:
 完成本实验室后，你将能够：
 
 - 准备和创建 MSIX 应用包
-- 在 Microsoft Entra DS 环境中为 Azure 虚拟桌面实施 MSIX 应用附加映像
-- 在 AD DS 环境中的 Azure 虚拟桌面上实施 MSIX 应用附加
+- 在 AD DS 环境中实现 Azure 虚拟桌面的 MSIX 应用附加映像
+- 在 AD DS 环境中实现 Azure 虚拟桌面的 MSIX 应用附加
 
 ## 实验室文件
 
@@ -62,9 +62,9 @@ lab:
    Get-AzVM -ResourceGroup 'az140-21-RG' | Start-AzVM -NoWait
    ```
 
-   >**注意**：该命令异步执行（由 -NoWait 参数确定），因此尽管此后可以立即在同一 PowerShell 会话中运行另一个 PowerShell 命令，但实际上也要花几分钟才能启动 Azure VM。 
+   > **注意**：该命令异步执行（由 -NoWait 参数确定），因此尽管此后可以立即在同一 PowerShell 会话中运行另一个 PowerShell 命令，但实际上也要花几分钟才能启动 Azure VM。 
 
-   >**备注**：如果在上一个实验室（实施和管理 AVD 配置文件）的第一个任务中的 az140-21-RG 资源组中的会话主机上启用了 PSRemoting，则可以直接转到下一个任务，而无需等待 Azure VM 启动。 如果先前未在 az140-21-RG 资源组中的会话主机上启用 PSRemoting，请等待 VM 启动，然后运行以下命令。
+   > **备注**：如果在上一个实验室（实施和管理 AVD 配置文件）的第一个任务中的 az140-21-RG 资源组中的会话主机上启用了 PSRemoting，则可以直接转到下一个任务，而无需等待 Azure VM 启动。 如果先前未在 az140-21-RG 资源组中的会话主机上启用 PSRemoting，请等待 VM 启动，然后运行以下命令。
 
 1. 在 Cloud Shell**** 的 PowerShell 会话中，运行以下命令，在会话主机上启用 PowerShell 远程处理。
 
@@ -95,7 +95,7 @@ lab:
 #### 任务 3：准备运行 Windows 10 的 Azure VM 以进行 MSIX 打包
 
 1. 在实验室计算机上的 Azure 门户中，搜索并选择“虚拟机”****，然后在“虚拟机”**** 边栏选项卡上的虚拟机列表中，选择“az140-cl-vm42”**** 条目。 这将打开“az140-cl-vm42”**** 边栏选项卡。
-1. 在“az140-cl-vm42”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-cl-vm42 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”************************。
+1. 在“az140-cl-vm42”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 在系统提示时，使用 wvdadmin1@adatum.com**** 用户名和在创建此用户帐户时设置的密码登录。 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以准备用于 MSIX 打包的操作系统：
 
@@ -164,7 +164,7 @@ lab:
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，启动 Microsoft Store**** 应用。
 1. 在 Microsoft Store**** 应用中，搜索并选择“MSIX 打包工具”****，在“MSIX 打包工具”**** 页上，选择“获取”****。
-1. 在出现提示时，跳过登录，等待安装完成，选择“打开”，然后在“发送诊断数据”对话框中选择“拒绝”************。 
+1. 在出现提示时，跳过登录，等待安装完成，选择“启动”，然后在“发送诊断数据”对话框中选择“拒绝”************， 
 
 #### 任务 7：创建 MSIX 包
 
@@ -190,6 +190,9 @@ lab:
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，切换到“MSIX 打包工具”**** 界面，在“选择任务”**** 页上，选择“应用程序包 - 创建应用包”**** 条目。 这将启动“创建新包”**** 向导。
 1. 在“创建新包”**** 向导的“选择环境”**** 页上，确保选中“在此计算机上创建包”**** 选项，选择“下一步”****，并等待安装 MSIX 打包工具驱动程序****。
+
+   > **注意**：MSIX 打包工具驱动程序的安装时间为 5-10。 状态栏最初会显示“正在检查”，安装完成后会显示“已安装”********。
+
 1. 在“创建新包”**** 向导的“准备计算机”**** 页上，查看建议。 如果有挂起的重新启动，请重启操作系统，使用 wvdadmin1@adatum.com**** 帐户重新登录，并在继续操作之前重启 MSIX 打包工具****。 
 
    >**备注**：MSIX 打包工具会暂时禁用 Windows 更新和 Windows 搜索。 在这种情况下，Windows 搜索服务已禁用。 
@@ -197,13 +200,11 @@ lab:
 1. 在“创建新包”**** 向导的“准备计算机”**** 页上，单击“下一步”****。
 1. 在“创建新包”向导的“选择安装程序”页上，在“选择要打包的安装程序”文本框旁边选择“浏览”，在“打开”对话框中浏览到 C:\\AllFiles\\Labs\\04 文件夹，选择“XmlNotepadSetup.msi”，然后单击“打开”********************************。 
 1. 在“创建新包”向导的“选择安装程序”页上，在“签名首选项”下拉列表中选择“使用证书 (.pfx) 签名”条目，在“浏览证书”文本框旁边选择“浏览”，在“打开”对话框中导航到 C:\\AllFiles\\Labs\\04 文件夹，选择 adatum.pfx 文件，单击“打开”，在“密码”文本框中键入 Pa55w.rd1234，然后选择“下一步”****************************************************。
-1. 在“创建新包”**** 向导的“包信息”**** 页上，查看包信息，验证发布者名称是否设置为 CN=Adatum****，然后选择“下一步”****。 这将触发已下载软件的安装流程。
-1. 在“XML 记事本安装”**** 窗口中，接受许可协议中的条款，然后选择“安装”****，并在安装完成后，选中“启动 XML 记事本”**** 复选框，然后选择“完成”****。
-1. 出现提示时，在“XML 记事本分析”**** 窗口中，选择“否”****，验证 XML 记事本是否正在运行，将其关闭，切换回“MSIX 打包工具”**** 窗口中的“创建新包”**** 向导，然后选择“下一步”****。
-
-   > **备注**：在这种情况下，无需重启即可完成安装。
-
-1. 在“创建新包”**** 向导的“首次启动任务”**** 页上，查看提供的信息，然后选择“下一步”****。
+1. 在“创建新包”**** 向导的“包信息”**** 页上，查看包信息，验证发布者名称是否设置为 CN=Adatum****，然后选择“下一步”****。
+1. 在“选择应用于包的加速器”页面，选择“下一步”********。 这将触发已下载软件的安装流程。
+1. 在“XMLNotepad 设置”窗口中，接受许可协议中的条款并选择“安装”，安装完成后，选择“完成”************。
+1. 在“创建新包”向导的“安装”页面中，选择“下一步”************。
+1. 在“创建新包”向导的“管理首次启动任务”页上，查看提供的信息并选择“下一步”************。
 1. 出现“已完成?”的**** 提示时，选择“ 是，继续”****。
 1. 在“创建新包”**** 向导的“服务报表”**** 页上，验证是否未列出任何服务，然后选择“下一步”****。
 1. 在“创建新包”向导的“创建包”页上，在“保存位置”文本框中键入 C:\\Allfiles\\Labs\\04\\XmlNotepad\XmlNotepad.msix，然后单击“创建”********************。
@@ -212,14 +213,14 @@ lab:
 1. 将 XmlNotepad.msix 文件复制到 C:\\Allfiles\\Labs\\04 文件夹********。
 
 
-### 练习 2：在 Microsoft Entra DS 环境中为 Azure 虚拟桌面实施 MSIX 应用附加映像
+### 练习 2：在 AD DS 环境中实现 Azure 虚拟桌面的 MSIX 应用附加映像
 
 此练习的主要任务如下：
 
-1. 在运行 Window 10 企业版的 Azure VM 上启用 Hyper-V
+1. 在运行 Window 11 Enterprise 多会话的 Azure VM 上启用 Hyper-V
 1. 创建 MSIX 应用附加映像
 
-#### 任务 1：在运行 Windows 10 企业版的 Azure VM 上启用 Hyper-V
+#### 任务 1：在运行 Window 11 Enterprise 多会话的 Azure VM 上启用 Hyper-V
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以便为 MSIX 应用附加准备目标 Windows 虚拟桌面主机： 
 
@@ -262,44 +263,21 @@ lab:
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，启动 Microsoft Edge****，浏览到 **https://aka.ms/msixmgr**。 这会自动将 msixmgr.zip 文件（MSIX mgr 工具存档）下载到 Downloads 文件夹中********。
 1. 在文件资源管理器中，导航到 Downloads 文件夹，打开压缩文件，并将 x64 文件夹的内容（包括该文件夹）复制到 C:\\AllFiles\\Labs\\04 文件夹************。 
-1. 在与 az140-cl-vm42**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****，并从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以创建将充当 MSIX 应用附加映像的 VHD 文件：
+1. 在与 az140-cl-vm42 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE，然后从“管理员: **********在 Windows PowerShell ISE** 脚本窗格中，运行以下命令以创建用于存储 MSIX 应用附加映像的文件夹：
 
    ```powershell
    New-Item -ItemType Directory -Path 'C:\Allfiles\Labs\04\MSIXVhds' -Force
-   New-VHD -SizeBytes 128MB -Path 'C:\Allfiles\Labs\04\MSIXVhds\XmlNotepad.vhd' -Dynamic -Confirm:$false
    ```
 
-1. 从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以装载新创建的 VHD 文件：
-
-   ```powershell
-   $vhdObject = Mount-VHD -Path 'C:\Allfiles\Labs\04\MSIXVhds\XmlNotepad.vhd' -Passthru
-   ```
-
-1. 从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以初始化磁盘、创建新分区、格式化该分区，并为该分区分配第一个可用的驱动器号：
-
-   ```powershell
-   $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
-   $partition = New-Partition -AssignDriveLetter -UseMaximumSize -DiskNumber $disk.Number
-   Format-Volume -FileSystem NTFS -Confirm:$false -DriveLetter $partition.DriveLetter -Force
-   ```
-
-   > **备注**：如果出现提示格式化 F: 驱动器的弹出窗口，请选择“取消”****。
-
-1. 从“管理员: Windows PowerShell ISE”**** 脚本窗格运行以下命令，以创建用于保存 MSIX 文件的文件夹结构，并将你在上一个任务中创建的 MSIX 包解压缩到其中：
+1. 在“管理员:**在 Windows PowerShell ISE** 脚本窗格中运行以下命令，以创建将托管 MSIX 文件的 VHD，并将你在上一个任务中创建的 MSIX 包解压缩到其中：
 
    ```powershell
    $appName = 'XmlNotepad'
-   New-Item -ItemType Directory -Path "$($partition.DriveLetter):\Apps" -Force
    Set-Location -Path 'C:\AllFiles\Labs\04\x64'
-   .\msixmgr.exe -Unpack -packagePath ..\$appName.msix -destination "$($partition.DriveLetter):\Apps" -applyacls
+   .\msixmgr.exe -Unpack -packagePath ..\$appName.msix -destination ..\MSIXVhds\$appName.vhd -applyacls -create -filetype vhd -vhdSize 128 -rootDirectory Apps
    ```
 
-1. 在与 az140-cl-vm42**** 的 Bastion 会话中的文件资源管理器中，导航到 F:\\Apps**** 文件夹并查看其内容。 如果系统提示获取对该文件夹的访问权限，请选择“继续”****。
-1. 在与 az140-cl-vm42**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以卸载将用作 MSIX 映像的 VHD 文件：
-
-   ```powershell
-   Dismount-VHD -Path "C:\Allfiles\Labs\04\MSIXVhds\$appName.vhd" -Confirm:$false
-   ```
+1. 在与 az140-cl-vm42 的 Bastion 会话中，在文件资源管理器中导航到 C:\AllFiles\Labs\04\MSIXVhds 文件夹，确保有一个名为 XmlNotepad.vhd 的虚拟磁盘********。
 
 ### 练习 3：在 Azure 虚拟桌面会话主机上实施 MSIX 应用附加
 
@@ -314,7 +292,7 @@ lab:
 #### 任务 1：配置包含 Azure 虚拟桌面主机的 Active Directory 组
 
 1. 切换到实验室计算机，在显示 Azure 门户的 Web 浏览器中，搜索并选择“虚拟机”****，然后在“虚拟机”**** 边栏选项卡中选择“az140-dc-vm11”****。
-1. 在“az140-dc-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-dc-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
+1. 在“az140-dc-vm11”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
@@ -347,18 +325,18 @@ lab:
 
    > **备注**：此步骤可确保组成员身份更改生效。 
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，展开“开始”**** 菜单中的“Microsoft Entra Connect”**** 文件夹，然后选择“Microsoft Entra Connect”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“欢迎使用 Microsoft Entra Connect”**** 页上，选择“配置”****。
+1. 在与 az140-dc-vm11 的 Bastion 会话中，在“开始”菜单中展开 Microsoft Azure AD Connect 文件夹，并选择“Microsoft Azure AD Connect”****************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“欢迎使用 Azure AD Connect”页上，选择“配置”************。
 1. 在“Microsoft Entra Connect”**** 窗口中的“其他任务”**** 页上，选择“自定义同步选项”****，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“连接到 Microsoft Entra”**** 页上，使用先前在本任务中标识的用户帐户 aadsyncuser**** 的用户主体名称和在创建此用户帐户时设置的密码进行身份验证。
-1. 在“Microsoft Entra Connect”**** 窗口中的“连接目录”**** 页上，选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“域和 OU 筛选”**** 页上，确保选中“同步所选域和 OU”**** 选项，展开“adatum.com”**** 节点，选择“WVDInfra”**** OU 旁边的复选框（保留任何其他选定的复选框不变），然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“可选功能”**** 页上，接受默认设置，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“准备好进行配置”**** 页上，确保未选中“配置完成后启动同步过程”**** 复选框，然后选择“配置”****。
-1. 查看“配置完成”**** 页中的信息，然后选择“退出”**** 以关闭“Microsoft Entra Connect”**** 窗口。
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，启动 Microsoft Edge 并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在与本实验室所用订阅关联的 Microsoft Entra 租户中具有全局管理员角色的用户帐户的 Microsoft Entra 凭据登录。
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“Azure Active Directory”**** 以导航到与此实验室使用的 Azure 订阅关联的 Microsoft Entra 租户。
-1. 在“Azure Active Directory”边栏选项卡上的左侧垂直菜单栏中，单击“管理”**** 部分中的“组”****。 
+1. 在“Microsoft Azure Active Directory Connect”窗口的“连接到 Microsoft Entra”页上，使用在本任务稍早部分标识的用户帐户“aadsyncuser”的用户主体名称和在创建此用户帐户时设置的密码进行身份验证************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“连接到目录”页上，选择“下一步”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“域和 OU 筛选”页上，确保已选中“同步所选域和 OU”选项，展开“adatum.com”节点，选中“WVDInfra”OU 旁边的复选框（任何其他已选中的复选框保持不变），然后选择“下一步”************************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“可选功能”页上，接受默认设置，然后选择“下一步”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“准备配置”页上，确保已选中“配置完成后启动同步过程”复选框，然后选择“配置”****************。
+1. 查看“配置完成”页中的信息，然后选择“退出”关闭“Microsoft Azure Active Directory Connect”窗口。
+1. 在与 az140-dc-vm11**** 的 Bastion 会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在与本实验室所用订阅关联的 Microsoft Entra 租户中具有全局管理员角色的用户帐户的 Microsoft Entra 凭据登录。
+1. 在与 az140-dc-vm11 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中搜索并选择“Microsoft Entra ID”，以导航到与本实验室中所用 Azure 订阅关联的 Microsoft Entra 租户********。
+1. 在“Microsoft Entra ID”边栏选项卡上左侧的垂直菜单栏中，在“管理”部分中，单击“组”********。 
 1. 在“组 | 全部组”边栏选项卡的组列表中，选择“az140-hosts-42-p1”条目********。
 
    > **备注**：可能需要刷新要显示的组的页面。
@@ -375,47 +353,64 @@ lab:
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中搜索并选择“存储帐户”****，然后在“存储帐户”**** 边栏选项卡上选择你已配置的用于托管用户配置文件的存储帐户。
 
-   > **备注**：实验室的此部分依赖于完成实验室 **Azure 虚拟桌面配置文件管理 (AD DS)** 或 **Azure 虚拟桌面配置文件管理 (Microsoft Entra DS)**
+   > **注意**：实验室的这一部分取决于完成实验室**实现和管理 AVD 的存储 (AD DS)** 或**实现和管理 AVD 的存储 (Microsoft Entra DS)**
 
    > **备注**：在生产应用场景中，应考虑使用单独的存储帐户。 这需要为该存储帐户配置 Microsoft Entra DS 身份验证，你已为托管用户配置文件的存储帐户实施了此设置。 之所以使用相同的存储帐户，是为了最大程度减少各个实验室中的重复步骤。
 
 1. 在“存储帐户”边栏选项卡上的左侧垂直菜单中，选择“访问控制(IAM)”****。
 1. 在存储帐户的“访问控制(IAM)”**** 边栏选项卡上，选择“+ 添加”****，然后从下拉菜单中选择“添加角色分配”****。 
-1. 在“添加角色分配”**** 边栏选项卡上，指定以下设置并选择“保存”****：
+1. 在“添加角色分配”边栏选项卡的“角色”选项卡上，指定以下设置并选择“下一步”************：
 
-   |设置|值|
+   |设置|“值”|
    |---|---|
-   |角色|**存储文件数据 SMB 共享提升参与者**|
-   |将访问权限分配到|用户、组或服务主体|
-   |选择|az140-wvd-admins****|
+   |工作职能角色|**存储文件数据 SMB 共享参与者**|
 
-   > **备注**：az140-wvd-admins**** 组包含用于配置共享权限的 wvdadmin1**** 用户帐户。 
+1. 在“添加角色分配”边栏选项卡上的“成员”选项卡上，单击“+ 选择成员”，指定以下设置，然后单击“选择”****************。 
 
-1. 重复前面的两个步骤来配置以下角色分配：
-
-   |设置|值|
+   |设置|“值”|
    |---|---|
-   |角色|**存储文件数据 SMB 共享提升参与者**|
-   |将访问权限分配到|用户、组或服务主体|
-   |选择|az140-hosts-42-p1****|
-
-   |设置|值|
-   |---|---|
-   |角色|**存储文件数据 SMB 共享读取者**|
-   |将访问权限分配到|用户、组或服务主体|
    |选择|az140-wvd-users****|
 
-   > **备注**：Azure 虚拟桌面用户和主机至少需要对文件共享具有读取访问权限。
+1. 在“添加角色分配”边栏选项卡上，选择“查看 + 分配”，然后再次选择“查看 + 分配”************。
+1. 在存储帐户的“访问控制(IAM)”**** 边栏选项卡上，选择“+ 添加”****，然后从下拉菜单中选择“添加角色分配”****。 
+1. 在“添加角色分配”边栏选项卡的“角色”选项卡上，指定以下设置并选择“下一步”************：
 
-1. 在“存储帐户”边栏选项卡上的左侧垂直菜单中，选择“数据存储”**** 部分中的“文件共享”****，然后选择“+ 文件共享”****。
-1. 在“新建文件共享”**** 边栏选项卡上，指定以下设置，然后选择“创建”****（其他设置保留默认值）：
+   |设置|“值”|
+   |---|---|
+   |工作职能角色|**存储文件数据 SMB 共享提升参与者**|
+
+1. 在“添加角色分配”边栏选项卡上的“成员”选项卡上，单击“+ 选择成员”，指定以下设置，然后单击“选择”****************。 
+
+   |设置|“值”|
+   |---|---|
+   |选择|az140-wvd-admins****|
+
+1. 在“添加角色分配”边栏选项卡上，选择“查看 + 分配”，然后再次选择“查看 + 分配”************。
+1. 在存储帐户的“访问控制(IAM)”**** 边栏选项卡上，选择“+ 添加”****，然后从下拉菜单中选择“添加角色分配”****。 
+1. 在“添加角色分配”边栏选项卡的“角色”选项卡上，指定以下设置并选择“下一步”************：
+
+   |设置|“值”|
+   |---|---|
+   |工作职能角色|**存储文件数据 SMB 共享提升参与者**|
+
+1. 在“添加角色分配”边栏选项卡上的“成员”选项卡上，单击“+ 选择成员”，指定以下设置，然后单击“选择”****************。 
+
+   |设置|“值”|
+   |---|---|
+   |选择|az140-hosts-42-p1****|
+
+1. 在“添加角色分配”边栏选项卡上，选择“查看 + 分配”，然后再次选择“查看 + 分配”************。
+
+1. 在存储帐户边栏选项卡的左侧垂直菜单中，在“数据存储”**** 部分，选择“文件共享”****，然后选择“+ 文件共享”****。
+1. 在“新建文件共享”边栏选项卡上，指定以下设置并选择“下一页: ******** 备份 >”（其他设置保留为默认值）：
 
    |设置|值|
    |---|---|
    |名称|az140-42-msixvhds****|
+   |访问层|事务优化|
 
+1. 在“备份”选项卡中，取消选中“启用备份”复选框，选择“查看 + 创建”，等待验证过程完成，然后选择“创建”****************。
 1. 在显示 Azure 门户的 Microsoft Edge 中的文件共享列表中，选择新创建的文件共享。 
-
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，启动“命令提示符”****，在“命令提示符”**** 窗口中运行以下命令，以将驱动器映射到 az140-42-msixvhds**** 共享（将 `<storage-account-name>` 占位符替换为存储帐户的名称），并验证命令已成功完成：
 
    ```cmd
@@ -438,7 +433,7 @@ lab:
 
    ```powershell
    New-Item -ItemType Directory -Path 'Z:\packages' 
-   Copy-Item -Path 'C:\Allfiles\Labs\04\MSIXVhds\XmlNotepad.vhd' -Destination 'Z:\packages' -Force
+   Copy-Item -Path 'C:\Allfiles\Labs\04\MSIXVhds\XmlNotepad.vhd' -Destination 'Z:\packages\' -Force
    ```
 
 #### 任务 3：在 Azure 虚拟桌面会话主机上装载和注册 MSIX 应用附加映像
@@ -466,7 +461,7 @@ lab:
 1. 在“Azure 虚拟桌面 \| 应用程序组”边栏选项卡上，选择“az140-21-hp1-Utilities-RAG”应用程序组条目********。
 1. 在“az140-21-hp1-Utilities-RAG”**** 边栏选项卡上的左侧垂直菜单中的“管理”**** 部分中，选择“应用程序”****。 
 1. 在“az140-21-hp1-Utilities-RAG \| 应用程序”**** 边栏选项卡上，单击“+ 添加”****。
-1. 在“添加应用程序”边栏选项卡的“基本信息”和“图标”选项卡上指定以下设置，然后选择“保存”****************：
+1. 在“添加应用程序”边栏选项卡的“基本信息”和“图标”选项卡上指定以下设置，然后选择“查看 + 添加”****************：
 
    |设置|值|
    |---|---|
@@ -476,29 +471,31 @@ lab:
    |申请标识符|XML Notepad****|
    |显示名称|XML Notepad****|
    |说明|XML Notepad****|
-   |图标源|**默认值**|
 
+1. 查看已配置的设置，然后选择“添加”****。
 1. 导航回“Azure 虚拟桌面 \| 应用程序组”边栏选项卡，选择“az140-21-hp1-DAG”应用程序组条目********。
 1. 在“az140-21-hp1-DAG”**** 边栏选项卡上的左侧垂直菜单中的“管理”**** 部分中，选择“应用程序”****。 
 1. 在“az140-21-hp1-DAG \| 应用程序”**** 边栏选项卡上，单击“+ 添加”****。
-1. 在“添加应用程序”边栏选项卡上，指定以下设置并选择“保存” ：
+1. 在“添加应用程序”边栏选项卡上，指定以下设置并选择“查看 + 添加”********：
 
    |设置|值|
    |---|---|
    |应用程序源|**MSIX 包**|
    |MSIX 包|表示包含在映像中的包的名称|
-   |应用程序名称|XML Notepad****|
+   |申请标识符|XML Notepad****|
    |显示名称|XML Notepad****|
    |说明|XML Notepad****|
+
+1. 查看已配置的设置，然后选择“添加”****。
 
 #### 任务 5：验证 MSIX 应用附加的功能
 
 1. 在与 az140-cl-vm42**** 的 Bastion 会话中，启动 Microsoft Edge，并导航到 Windows 桌面客户端下载页[](https://go.microsoft.com/fwlink/?linkid=2068602)，然后在下载完成时，选择“打开文件”**** 以开始安装。 在“远程桌面安装”向导的“安装范围”页上，选择“为此计算机的所有用户安装”选项，然后单击“安装”   。 
 1. 安装完成后，请确保“安装完成时启动远程桌面”复选框处于选中状态，然后单击“完成”以启动“远程桌面客户端” 。
 1. 在“远程桌面”客户端窗口中，选择“订阅”，并在出现提示时使用用户主体名称“aduser1”和在创建此用户帐户时设置的密码进行登录************。 
-1. 如果收到提示，在“保持登录到所有应用”**** 窗口中，清除“允许组织管理我的设备”**** 复选框，然后选择“否，仅登录到此应用”****。
 1. 在“远程桌面”**** 客户端窗口中的 az140-21-ws1**** 部分中，双击“XML 记事本”**** 图标，出现提示时提供密码，并验证 XML 记事本是否成功启动。
-
+1. 在与 az140-cl-vm42 的 Bastion 会话中，右键单击“启动”，在右键菜单中选择“关闭或退出登录”，然后在级联菜单中选择“退出登录”****************。
+1. 在“断开连接”对话框中，选择“关闭”********。
 
 ### 练习 4：停止并解除分配在实验室中预配和使用的 Azure VM
 

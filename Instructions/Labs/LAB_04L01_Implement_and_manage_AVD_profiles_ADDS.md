@@ -12,7 +12,7 @@ lab:
 - 本实验室将使用的 Azure 订阅。
 - Microsoft 帐户或 Microsoft Entra 帐户，该帐户在本实验室将会使用的 Azure 订阅中具有所有者或参与者角色，在与该 Azure 订阅关联的 Microsoft Entra 租户中具有全局管理员角色。
 - 已完成实验室“准备部署 Azure 虚拟桌面 (AD DS)”
-- 已完实验室“实施和管理 WVD 的存储 (AD DS)”****
+- 已完成实验室**实现和管理 AVD 存储 (AD DS)**
 
 ## 预计用时
 
@@ -40,24 +40,12 @@ lab:
 
 1. 在 Azure 虚拟桌面会话主机 VM 上配置基于 FSLogix 的配置文件
 1. 使用 Azure 虚拟桌面测试基于 FSLogix 的配置文件
-1. 删除实验室中部署的 Azure 资源
 
 #### 任务 1：在 Azure 虚拟桌面会话主机 VM 上配置基于 FSLogix 的配置文件
 
 1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
-1. 在 Azure 门户中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-21-p1-0”************。
-1. 在“az140-21-p1-0”边栏选项卡上，选择“启动”，等待虚拟机的状态更改为“正在运行”************。
-1. 在“az140-21-p1-0”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-21-p1-0 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”************************。
-1. 系统出现提示时，请使用以下凭据登录：
-
-   |设置|值|
-   |---|---|
-   |用户名|**student@adatum.com**|
-   |密码|**Pa55w.rd1234**|
-
-1. 在与 az140-21-p1-0**** 的 Bastion 会话中，启动 Microsoft Edge 并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室所用订阅中具有所有者角色的用户帐户的 Microsoft Entra 凭据登录。
-1. 在与 az140-21-p1-0**** 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 浏览器窗口中，打开“Cloud Shell”窗格中的 PowerShell 会话。 
-1. 从“Cloud Shell”**** 窗格的 PowerShell 会话中运行以下命令，以启动将在本实验室中使用的 Azure 虚拟桌面会话主机 Azure VM：
+1. 在 Azure 门户中，通过选择搜索文本框右侧的“工具栏”图标，打开“Cloud Shell”窗格。
+1. 在“Cloud Shell”窗格中，运行以下命令，以启动你将在本实验室中使用的 Azure 虚拟桌面会话主机 Azure VM****：
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG' | Start-AzVM
@@ -65,35 +53,34 @@ lab:
 
    >**备注**：等到 Azure VM 开始运行后再继续执行下一步操作。
 
-1. 从“Cloud Shell”**** 窗格的 PowerShell 会话中运行以下命令，在会话主机上启用 PowerShell 远程处理。
+1. 在“Cloud Shell”窗格中，运行以下命令，以在会话主机上启用 PowerShell 远程处理****。
 
    ```powershell
    Get-AzVM -ResourceGroup 'az140-21-RG' | Enable-AzVMPSRemoting
    ```
-   
+
 1. 关闭 Cloud Shell
+1. 在 Azure 门户中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-21-p1-0”************。
+1. 在“az140-21-p1-0”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
+1. 系统出现提示时，请使用以下凭据登录：
+
+   |设置|值|
+   |---|---|
+   |用户名|**student@adatum.com**|
+   |密码|**Pa55w.rd1234**|
+
 1. 在与 az140-21-p1-0**** 的 Bastion 会话中，启动 Microsoft Edge，浏览到 FSLogix 下载页[](https://aka.ms/fslogix_download)，下载 FSLogix 压缩安装二进制文件，将其解压到 C:\\Allfiles\\Labs\\04**** 文件夹（如果需要，请创建该文件夹），导航到“x64\\Release”**** 子文件夹，双击“FSLogixAppsSetup.exe”**** 文件以启动 Microsoft FSLogix 应用安装**** 向导，然后使用默认设置逐步安装 Microsoft FSLogix 应用。
 
-   > **备注**：如果映像已包含 FXLogic，则不需要安装 FXLogic。
+   > **注意**：如果映像已包含 FSLogix，则无需进行安装。
 
-1. 在与 az140-21-p1-0**** 的远程桌面会话中，以管理员身份启动 Windows PowerShell ISE****，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以安装最新版本的 PowerShellGet 模块（如果提示确认，请选择“是”****）：
-
-   ```powershell
-   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-   Install-Module -Name PowerShellGet -Force -SkipPublisherCheck
-   ```
-
-1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以安装最新版本的 Az PowerShell 模块（如果提示确认，请选择“全部确认”）：
+1. 在与**az140-21-p1-0**的 Bastion 会话中，以管理员身份启动**Windows PowerShell ISE**。
+1. 在“管理员:**Windows PowerShell ISE**”控制台中运行以下命令，以安装最新版本的 Az PowerShell 模块（提示安装和导入 NuGet 时输入**Y**）：
 
    ```powershell
-   Install-Module -Name Az -AllowClobber -SkipPublisherCheck
+   Install-Module -Name Az -AllowClobber -SkipPublisherCheck -Force
    ```
 
-1. 从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以修改执行策略：
-
-   ```powershell
-   Set-ExecutionPolicy RemoteSigned -Force
-   ```
+   > **注意**：可能需要等待 3-5 分钟，然后才会显示 Az 模块安装的任何输出。 在输出停止后，可能需要再等待 5 分钟****。 这是预期的行为。
 
 1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
 
@@ -106,7 +93,7 @@ lab:
 
    ```powershell
    $resourceGroupName = 'az140-22-RG'
-   $storageAccountName = (Get-AzStorageAccount -ResourceGroupName $resourceGroupName)[0].StorageAccountName   
+   $storageAccountName = (Get-AzStorageAccount -ResourceGroupName $resourceGroupName)[0].StorageAccountName
    ```
 
 1. 在与 az140-21-p1-0**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以配置配置文件注册表设置：
@@ -138,6 +125,8 @@ lab:
 
    > **备注**：若要提供一致的用户体验，需要在所有 Azure 虚拟桌面会话主机上安装和配置 FSLogix 组件。 你将在实验室环境中其他会话主机上以无人参与的方式执行此任务。 
 
+   > **注意**：如果已在会话主机上安装 FSLogix，则不需要执行以下步骤。
+
 1. 在与 az140-21-p1-0**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以在 az140-21-p1-1**** 和az140-21-p1-2**** 会话主机上安装 FSLogix 组件：
 
    ```powershell
@@ -157,6 +146,7 @@ lab:
 1. 在与 az140-21-p1-0**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以在 az140-21-p1-1**** 和 az140-21-p1-1**** 会话主机上配置配置文件注册表设置：
 
    ```powershell
+   $servers = 'az140-21-p1-1', 'az140-21-p1-2'
    $profilesParentKey = 'HKLM:\SOFTWARE\FSLogix'
    $profilesChildKey = 'Profiles'
    $fileShareName = 'az140-22-profiles'
@@ -179,10 +169,13 @@ lab:
    Get-CimInstance -ComputerName $servers -Class Win32_UserProfile | Where-Object { $_.LocalPath.split('\')[-1] -eq $userName } | Remove-CimInstance
    ```
 
+1. 在与**az140-21-p1-0**的 Bastion 会话中，右键单击“启动”，在右键菜单中选择“关闭或退出登录”，然后在级联菜单中选择“退出登录”************。
+1. 在“断开连接”窗口中，选择“关闭”********。
+
 #### 任务 2：使用 Azure 虚拟桌面测试基于 FSLogix 的配置文件
 
 1. 切换到你的实验室计算机，在该实验室计算机的显示 Azure 门户的浏览器窗口中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡上，选择“az140-cl-vm11”条目  。
-1. 在“az140-cl-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-cl-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
+1. 在“az140-cl-vm11”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
@@ -194,24 +187,25 @@ lab:
 1. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口中，选择“订阅”****，在出现提示时使用 aduser1**** 的凭据登录。
 
    >注意：如果系统未要求你订阅，则可能需要取消之前的订阅****。
-3. 在应用程序列表中，双击命令提示符，出现提示时，提供 aduser1 帐户的密码，并验证“命令提示符”窗口是否成功打开************。
-4. 在“命令提示符”**** 窗口的左上角，右键单击“命令提示符”**** 图标，然后在下拉菜单中选择“属性”****。
-5. 在“命令提示符属性”**** 对话框中，选择“字体”**** 选项卡，修改大小和字体设置，然后选择“确定”****。
-6. 在“命令提示符”**** 窗口中，键入“logoff”****，然后按 Enter**** 键从远程桌面会话注销。
-7. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口的应用程序列表中，双击 az140-21-ws1 下的“SessionDesktop”****，并验证是否启动了远程桌面会话。 
-8. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“运行”****，在“运行”**** 对话框的“打开”**** 文本框中，键入“cmd”****，然后选择“确定”**** 以启动“命令提示符”**** 窗口：
-9. 验证“命令提示符”**** 窗口设置是否与之前在此任务中配置的设置匹配。
-10. 在 SessionDesktop**** 会话中，最小化所有窗口，右键单击桌面，在右键单击菜单中，选择“新建”****，然后在级联菜单中选择“快捷方式”****。 
-11. 在“创建快捷方式”**** 向导的“想为哪个项目创建快捷方式?”**** 页的“请键入项目的位置”**** 文本框中，键入“Notepad”**** 并选择“下一步”****。
-12. 在“创建快捷方式”**** 向导的“想将快捷方式命名为什么”**** 页中，在“键入该快捷方式的名称”**** 文本框中键入“Notepad”**** 并选择“完成”****。
-13. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“关闭或注销”****，然后在级联菜单中，选择“注销”****。
-14. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口的应用程序列表中，双击“SessionDesktop”****，以启动新的远程桌面会话。 
-15. 在 SessionDesktop**** 会话中，验证记事本**** 快捷方式是否显示在桌面上。
-16. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“关闭或注销”****，然后在级联菜单中，选择“注销”****。
-17. 切换到实验室计算机，然后在显示 Azure 门户的 Microsoft Edge 窗口中，导航到“存储帐户”**** 边栏选项卡，然后选择表示在上一练习中创建的存储帐户的条目。
-18. 在“存储帐户”边栏选项卡上的“文件服务”**** 部分中，选择“文件共享”****，然后在文件共享列表中，选择“az140-22-profiles”****。 
-19. 在“az140-22-profiles”**** 边栏选项卡上，选择“浏览”**** 并验证其内容是否包含一个文件夹，该文件夹名称由 ADATUM\\aduser1**** 帐户的安全标识符 (SID) 和“_aduser1”**** 后缀组成。
-20. 选择在上一步中标识的文件夹，注意其中包含了名为 Profile_aduser1.vhd**** 的单个文件。
+
+1. 在应用程序列表中，双击命令提示符，出现提示时，提供 aduser1 帐户的密码，并验证“命令提示符”窗口是否成功打开************。
+1. 在“命令提示符”**** 窗口的左上角，右键单击“命令提示符”**** 图标，然后在下拉菜单中选择“属性”****。
+1. 在“命令提示符属性”**** 对话框中，选择“字体”**** 选项卡，修改大小和字体设置，然后选择“确定”****。
+1. 在“命令提示符”**** 窗口中，键入“logoff”****，然后按 Enter**** 键从远程桌面会话注销。
+1. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口的应用程序列表中，双击 az140-21-ws1 下的“SessionDesktop”****，并验证是否启动了远程桌面会话。 
+1. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“运行”****，在“运行”**** 对话框的“打开”**** 文本框中，键入“cmd”****，然后选择“确定”**** 以启动“命令提示符”**** 窗口：
+1. 验证“命令提示符”**** 窗口设置是否与之前在此任务中配置的设置匹配。
+1. 在 SessionDesktop**** 会话中，最小化所有窗口，右键单击桌面，在右键单击菜单中，选择“新建”****，然后在级联菜单中选择“快捷方式”****。 
+1. 在“创建快捷方式”**** 向导的“想为哪个项目创建快捷方式?”**** 页的“请键入项目的位置”**** 文本框中，键入“Notepad”**** 并选择“下一步”****。
+1. 在“创建快捷方式”**** 向导的“想将快捷方式命名为什么”**** 页中，在“键入该快捷方式的名称”**** 文本框中键入“Notepad”**** 并选择“完成”****。
+1. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“关闭或注销”****，然后在级联菜单中，选择“注销”****。
+1. 在与 az140-cl-vm11**** 的 Bastion 会话中，在“远程桌面”**** 客户端窗口的应用程序列表中，双击“SessionDesktop”****，以启动新的远程桌面会话。 
+1. 在 SessionDesktop**** 会话中，验证记事本**** 快捷方式是否显示在桌面上。
+1. 在 SessionDesktop**** 会话中，右键单击“开始”****，在右键单击菜单中，选择“关闭或注销”****，然后在级联菜单中，选择“注销”****。
+1. 切换到实验室计算机，然后在显示 Azure 门户的 Microsoft Edge 窗口中，导航到“存储帐户”**** 边栏选项卡，然后选择表示在上一练习中创建的存储帐户的条目。
+1. 在“存储帐户”边栏选项卡上的“文件服务”**** 部分中，选择“文件共享”****，然后在文件共享列表中，选择“az140-22-profiles”****。 
+1. 在“az140-22-profiles”**** 边栏选项卡上，选择“浏览”**** 并验证其内容是否包含一个文件夹，该文件夹名称由 ADATUM\\aduser1**** 帐户的安全标识符 (SID) 和“_aduser1”**** 后缀组成。
+1. 选择在上一步中标识的文件夹，注意其中包含了名为 Profile_aduser1.vhd**** 的单个文件。
 
 ### 练习 2：停止并解除分配在实验室中预配和使用的 Azure VM
 

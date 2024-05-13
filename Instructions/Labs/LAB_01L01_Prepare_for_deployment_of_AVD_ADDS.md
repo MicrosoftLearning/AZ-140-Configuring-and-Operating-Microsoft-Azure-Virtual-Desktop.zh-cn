@@ -25,7 +25,7 @@ lab:
 完成本实验室后，你将能够：
 
 - 使用 Azure VM 部署 Active Directory 域服务 (AD DS) 单域林
-- 将单个 AD DS 林与单个 Microsoft Entra 租户集成
+- 将 AD DS 林与 Microsoft Entra 租户集成
 
 ## 实验室文件
 
@@ -110,9 +110,10 @@ lab:
 #### 任务 1：准备 Azure VM 部署
 
 1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
-1. 在显示 Azure 门户的 Web 浏览器中，导航到 Microsoft Entra 租户的“概述”**** 边栏选项卡，在左侧垂直菜单的“管理”**** 部分中，单击“属性”****。
+1. 在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”文本框，搜索并导航到“Microsoft Entra ID”边栏选项卡********。
+1. 从 Microsoft Entra 租户的“概述”边栏选项卡，并在左侧垂直菜单的“管理”部分，单击“属性”************。
 1. 在 Microsoft Entra 租户的“属性”**** 边栏选项卡的最底部，选择“管理安全默认值”**** 链接。
-1. 如有需要，在“启用安全默认值”边栏选项卡上，选择“否”，选中“我的组织正在使用条件访问”复选框，然后选择“保存”   。
+1. 在“启用安全默认值”边栏选项卡上，根据需要选择“禁用(不推荐)”，选择“我的组织计划使用条件访问”选项按钮，选择“保存”，然后选择“禁用”********************。
 1. 在 Azure 门户中，通过选择搜索文本框右侧的“工具栏”图标，打开“Cloud Shell”窗格。
 1. 如果系统提示选择“Bash”或“PowerShell”，请选择“PowerShell”  。 
 
@@ -131,7 +132,7 @@ lab:
 
 1. 在 Azure 门户中，关闭 Cloud Shell 窗格。
 1. 在实验室计算机的同一 Web 浏览器窗口中，打开另一个 Web 浏览器选项卡并导航到名为[创建新的 Windows VM 并创建新的 AD 林、域和 DC](https://github.com/az140mp/azure-quickstart-templates/tree/master/application-workloads/active-directory/active-directory-new-domain) 的自定义版快速入门模板。 
-1. 在“创建新的 Windows VM 并创建新的 AD 林、域和 DC”页上，选择“部署到 Azure” 。 这会自动将浏览器重定向到 Azure 门户中的“使用新的 AD 林创建 Azure VM”边栏选项卡。
+1. 在“创建新的 Windows VM 并创建新的 AD 林、域和 DC”页面上，向下滚动页面并选择“部署到 Azure”********。 这会自动将浏览器重定向到 Azure 门户中的“使用新的 AD 林创建 Azure VM”边栏选项卡。
 1. 在“使用新的 AD 林创建 Azure VM”边栏选项卡中，选择“编辑参数”。
 1. 在“编辑参数”边栏选项卡中，选择“加载文件”，在“打开”对话框中，选择“\\\\AZ-140\\AllFiles\\Labs\\01\\az140-11_azuredeploydc11.parameters.json”，然后依次选择“打开”和“保存”     。 
 1. 在“使用新的 AD 林创建 Azure VM”边栏选项卡中，指定以下设置（将其他设置保留为默认值）：
@@ -144,7 +145,7 @@ lab:
 
 1. 在“使用新的 AD 林创建 Azure VM”边栏选项卡中，选择“查看 + 创建”，然后单击“创建”  。
 
-   > 注意：请等待部署完成再继续下一个练习。 这可能需要大约 15 分钟。 
+   > 注意：请等待部署完成再继续下一个练习。 此部署可能需要 20-25 分钟。 
 
 #### 任务 3：使用 Azure 资源管理器快速启动模板部署运行 Windows 10 的 Azure VM
 
@@ -213,7 +214,7 @@ lab:
 
 1. 在“创建 Bastion”边栏选项卡的“查看 + 创建”选项卡上，选择“创建”  ：
 
-   > 注意：请等待部署完成再继续下一个练习。 部署可能需要大约 5 分钟时间。
+   > 注意：在继续下一个练习之前，请等待部署完成。 部署可能需要大约 10 分钟时间。
 
 ### 练习 2：将单个 AD DS 林与单个 Microsoft Entra 租户集成
   
@@ -223,12 +224,11 @@ lab:
 1. 配置 AD DS UPN 后缀
 1. 创建将用于配置 Microsoft Entra 同步的 Microsoft Entra 用户
 1. 安装 Microsoft Entra Connect
-1. 配置 Microsoft Entra 混合加入
 
 #### 任务 1：创建将同步到 Microsoft Entra 的 AD DS 用户和组
 
 1. 切换到实验室计算机，在显示 Azure 门户的 Web 浏览器中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中选择“az140-dc-vm11”  。
-1. 在“az140-dc-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-dc-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
+1. 在“az140-dc-vm11”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
@@ -236,7 +236,7 @@ lab:
    |用户名|**学生**|
    |密码|**Pa55w.rd1234**|
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，以管理员身份启动 Windows PowerShell ISE 。
+1. 在与 az140-dc-vm11**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****。
 1. 在“管理员:Windows PowerShell ISE”脚本窗格中，运行以下命令禁用针对管理员的 Internet Explorer 增强安全性：
 
    ```powershell
@@ -306,7 +306,7 @@ lab:
 
 #### 任务 2：配置 AD DS UPN 后缀
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格中运行以下命令，以安装最新版本的 PowerShellGet 模块（如果提示确认，请选择“是”）：
+1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格中运行以下命令，以安装最新版本的 PowerShellGet 模块（如果提示确认，请选择“是”）****：
 
    ```powershell
    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -318,6 +318,8 @@ lab:
    ```powershell
    Install-Module -Name Az -AllowClobber -SkipPublisherCheck
    ```
+
+   > **注意**：可能需要等待 3-5 分钟，然后才会显示 Az 模块安装的任何输出。 在输出停止后，可能需要再等待 5 分钟****。 这是预期的行为。
 
 1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
 
@@ -365,7 +367,7 @@ lab:
    $domainUsers | foreach {$newUpn = $_.UserPrincipalName.Replace('adatum.com',$aadDomainName); $_ | Set-ADUser -UserPrincipalName $newUpn}
    ```
 
-1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以将 adatum.com UPN 后缀分配给学生域用户 ：
+1. 在“管理员:**** Windows PowerShell ISE”控制台中运行以下命令，以将 adatum.com UPN 后缀分配给学生域用户********：
 
    ```powershell
    $domainAdminUser = Get-ADUser -Filter {sAMAccountName -eq 'Student'} -Properties userPrincipalName
@@ -374,9 +376,9 @@ lab:
 
 #### 任务 3：创建将用于配置目录同步的 Microsoft Entra 用户
 
-1. 在与 az140-dc-vm11**** 的远程桌面会话中，从“管理员: Windows PowerShell ISE”**** 脚本窗格中运行以下命令，以创建新的 Microsoft Entra 用户（将 `<password>` 占位符替换为随机的复杂密码）：
+1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格，运行以下命令以创建新的 Microsoft Entra 用户（将 `<password>` 占位符替换为随机的复杂密码）：
 
-   > **备注**：确保记录所使用的密码。 稍后将在本实验室和后续实验室中用到它。
+   > **备注**：确保记录所使用的密码。 稍后将在本实验室和后续实验室中用到它****。
 
    ```powershell
    $userName = 'aadsyncuser'
@@ -400,12 +402,12 @@ lab:
    (Get-AzureADUser -Filter "MailNickName eq '$userName'").UserPrincipalName
    ```
 
-   > **注意**：记录用户主体名称。 本练习中稍后会用到它。 
+   > **注意**：记下用户主体名称和密码****。 本练习中稍后会用到它。 
 
 
 #### 任务 4：安装 Microsoft Entra Connect
 
-1. 在与 az140-dc-vm11 的远程桌面会话中，从“管理员:  Windows PowerShell ISE”脚本窗格中运行以下命令，以启用 TLS 1.2：
+1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格中运行以下命令，以启用 TLS 1.2：
 
    ```powershell
    New-Item 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v4.0.30319' -Force | Out-Null
@@ -423,18 +425,18 @@ lab:
    Write-Host 'TLS 1.2 has been enabled.'
    ```
    
-1. 在与 az140-dc-vm11 的远程桌面会话中，启动 Internet Explorer，导航到 [Microsoft Edge 企业版下载页](https://www.microsoft.com/en-us/edge/business/download)。
+1. 在与 az140-dc-vm11 的 Bastion 会话中，启动 Internet Explorer，导航到 [Microsoft Edge 企业版下载页面](https://www.microsoft.com/en-us/edge/business/download)****。
 1. 从 [Microsoft Edge 企业版下载页](https://www.microsoft.com/en-us/edge/business/download)下载 Microsoft Edge 的最新稳定版本，安装、启动该版本，并使用默认设置对其进行配置。
 1. 在与 az140-dc-vm11 的远程桌面会话中，使用 Microsoft Edge 导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在本实验室所用订阅中具有所有者角色的用户帐户的 Microsoft Entra 凭据登录。
-1. 在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”**** 文本框，搜索并导航到“Azure Active Directory”**** 边栏选项卡，在“Microsoft Entra 租户”边栏选项卡上的中心菜单的“管理”**** 部分中，选择“Microsoft Entra Connect”****。
-1. 在“Microsoft Entra Connect”**** 边栏选项卡上，先选择“连接同步”**** 链接，然后选择“下载 Microsoft Entra Connect”**** 链接。 这将自动打开新的浏览器标签页，其中显示了“Microsoft Azure Active Directory Connect”下载页。
-1. 在“Microsoft Azure Active Directory Connect”下载页，选择“下载” 。
+1. 在 Azure 门户中，使用 Azure 门户页顶部的“搜索资源、服务和文档”文本框，搜索并导航到“Microsoft Entra ID”边栏选项卡，在“Microsoft Entra 租户”边栏选项卡上，在中心菜单的“管理”部分，选择“Microsoft Entra Connect”****************。
+1. 在“Microsoft Entra Connect”边栏选项卡上，从服务菜单中选择“连接同步”链接，然后选择“下载 Microsoft Entra Connect”链接************。 这将自动打开新的浏览器标签页，其中显示了“Microsoft Entra Connect”下载页面****。
+1. 在“Microsoft Entra Connect”下载页面，选择“下载”********。
 1. 如果系统提示是运行还是保存 AzureADConnect.msi 安装程序，请选择“运行” 。 否则，请在下载文件后打开该文件以启动 Microsoft Azure Active Directory Connect 向导。
-1. 在“Microsoft Azure Active Directory Connect”**** 向导的“欢迎使用 Microsoft Entra Connect”**** 页中，选中“我同意许可条款和隐私声明”**** 复选框，然后选择“继续”****。
+1. 在“Microsoft Azure Active Directory Connect”向导的“欢迎使用 Azure AD Connect”页面中，选中复选框“我同意许可条款和隐私声明”，然后选择“继续”   。
 1. 在“Microsoft Azure Active Directory Connect”向导的“快速设置”页面中，选择“自定义”选项。
 1. 在“安装所需组件”页面中，取消选择所有可选配置选项并选择“安装”。
 1. 在“用户登录”页面中，确保仅启用“密码哈希同步”，然后选择“下一步”。
-1. 在“连接到 Microsoft Entra”**** 页上，使用在上一个练习中创建的 aadsyncuser**** 用户帐户的凭据进行身份验证，然后选择“下一步”****。 
+1. 在“连接到 Azure AD”页面中，使用你在上一个练习中创建的“aadsyncuser”用户帐户凭据进行身份验证，然后选择“下一步”  。 
 
    > **注意**：提供在本练习前面记录的 aadsyncuser 帐户的 userPrincipalName 属性，并指定你之前在本实验中设置的密码作为其密码。
 
@@ -447,7 +449,7 @@ lab:
    |密码|**Pa55w.rd1234**|
 
 1. 返回“连接目录”页面，确保“adatum.com”条目显示为已配置的目录，然后选择“下一步”
-1. 在“Microsoft Entra 登录配置”**** 页上，看到警告说明“如果 UPN 后缀与已验证域名不匹配，用户将无法使用本地凭据登录 Microsoft Entra”****，启用“继续，不将所有 UPN 后缀与已验证域匹配”**** 复选框，然后选择“下一步”****。
+1. 在“Azure AD 登录配置”页面中，看到警告说明“如果 UPN 后缀与已验证域名不匹配，用户将无法使用本地凭据登录 Azure AD”，启用复选框“继续，不将所有 UPN 后缀与已验证域匹配”，然后选择“下一步”。
 
    > **备注**：这是预期情况，因为 Microsoft Entra 租户没有与 adatum.com**** AD DS 的其中某个 UPN 后缀匹配的已验证自定义 DNS 域。
 
@@ -457,7 +459,7 @@ lab:
 1. 在“可选功能”页面中接受默认设置，然后选择“下一步”。
 1. 在“准备配置”页面在确保选中“配置完成后启动同步过程”复选框，然后选择“安装”。
 
-   > **注意**：安装需要约 2 分钟。
+   > **注意**：安装需要约 5 分钟。
 
 1. 查看“配置完成”页中的信息，然后选择“退出”关闭“Microsoft Azure Active Directory Connect”窗口。
 1. 在与 az140-vm11**** 的远程桌面会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，导航到 Adatum 实验室 Microsoft Entra 租户的“用户 - 所有用户”**** 边栏选项卡 。

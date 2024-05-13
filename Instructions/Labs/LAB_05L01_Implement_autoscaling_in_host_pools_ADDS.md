@@ -40,7 +40,8 @@ lab:
 此练习的主要任务如下：
 
 1. 准备缩放 Azure 虚拟桌面会话主机
-2. 创建 Azure 虚拟桌面会话主机的缩放计划
+2. 设置诊断以跟踪 Azure 虚拟桌面自动缩放
+3. 创建 Azure 虚拟桌面会话主机的缩放计划
 
 #### 任务 1：准备缩放 Azure 虚拟桌面会话主机
 
@@ -65,22 +66,59 @@ lab:
 1. 在 Azure 门户中，搜索并选择“订阅”****，然后从订阅列表中选择包含 Azure 虚拟桌面资源的订阅。 
 1. 在“订阅”页上，选择“访问控制(IAM)”****。
 1. 在“访问控制(IAM)”**** 页上的工具栏中，选择“+ 添加”按钮****，然后从下拉列表菜单中选择“添加角色分配”****。
-1. 在“添加角色分配”**** 向导的“角色”**** 选项卡上，搜索并选择“桌面虚拟化启停参与者”**** 角色，然后单击“下一步”****。
-1. 在“添加角色分配”**** 向导的“成员”**** 选项卡上，选择“+ 选择成员”****，搜索并选择“Azure 虚拟桌面”**** 或“Windows 虚拟桌面”****，单击“选择”**** 并单击“下一步”****。
+1. 在“添加角色分配”边栏选项卡的“角色”选项卡上，指定以下设置并选择“下一步”************：
+
+   |设置|“值”|
+   |---|---|
+   |工作职能角色|**桌面虚拟化开/关参与者**|
+
+1. 在“添加角色分配”边栏选项卡上的“成员”选项卡上，单击“+ 选择成员”，指定以下设置，然后单击“选择”****************。 
+
+   |设置|“值”|
+   |---|---|
+   |选择|Azure 虚拟桌面现或 Windows 虚拟桌面********|
+
+1. 在“添加角色分配”边栏选项卡上，选择“查看 + 分配”********
 
    >**备注**：该值取决于 Microsoft.DesktopVirtualization**** 资源提供程序首次在 Azure 租户中注册的时间。
 
 1. 在“查看 + 分配”**** 选项卡上，选择“查看 + 分配”****。
 
-#### 任务 2：创建 Azure 虚拟桌面会话主机的缩放计划
+#### 任务 2：设置诊断以跟踪 Azure 虚拟桌面自动缩放
+
+1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
+
+   >**备注**：将使用 Azure 存储帐户来存储自动缩放事件。 可以直接从 Azure 门户创建，也可以使用 Azure PowerShell，如此任务所示。
+
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以创建 Azure 存储帐户：
+
+   ```powershell
+   $resourceGroupName = 'az140-51-RG'
+   $location = (Get-AzResourceGroup -ResourceGroupName 'az140-11-RG').Location
+   New-AzResourceGroup -Location $location -Name $resourceGroupName
+   $suffix = Get-Random
+   $storageAccountName = "az140st51$suffix"
+   New-AzStorageAccount -Location $location -Name $storageAccountName -ResourceGroupName $resourceGroupName -SkuName Standard_LRS
+   ```
+
+   >**备注**：等待至存储帐户预配完成。
+
+1. 在显示 Azure 门户的浏览器窗口中，关闭“Cloud Shell”窗格。
+1. 在实验室计算机显示 Azure 门户的浏览器中，导航到 az140-21-hp1 主机池页面****。
+1. 在 az140-21-hp1 页面上，选择“诊断设置”，然后选择“+ 添加诊断设置”************。
+1. 在“诊断设置”页上，在“诊断设置名称”文本框中，输入 az140-51-scaling-plan-diagnostics ，然后在“类别组”部分，选择“自动缩放池化主机池的日志”********************。 
+1. 在同一页上，在“目标详细信息”**** 部分，选择“存档到存储帐户”****，然后在“存储帐户”**** 下拉列表中，选择以 az140st51**** 前缀开头的存储帐户名称。
+1. 选择“保存”。
+
+#### 任务 3：创建 Azure 虚拟桌面会话主机的缩放计划
 
 1. 在实验室计算机上的显示 Azure 门户的浏览器中，搜索并选择“Azure 虚拟桌面”****。 
 1. 在“Azure 虚拟桌面”**** 页上，选择“缩放计划”****，然后选择“+ 创建”****。
-1. 在“创建缩放计划”**** 向导的“基本信息”**** 选项卡上，指定以下信息并选择“下一步计划 >”****（其他设置保留默认值）：
+1. 在“创建缩放计划”向导的“基本信息”选项卡上，指定以下信息并选择“下一页: ************ 时间表”（将其他字段保留为默认值）：
 
    |设置|值|
    |---|---|
-   |资源组|新资源组名称 az140-51-RG****|
+   |资源组|**az140-51-RG**|
    |名称|az140-51-scaling-plan****|
    |位置|在上一个实验室中部署会话主机的同一 Azure 区域|
    |友好名称|az140-51 缩放计划****|
@@ -154,35 +192,10 @@ lab:
 
 此练习的主要任务如下：
 
-1. 设置诊断以跟踪 Azure 虚拟桌面自动缩放
 1. 验证 Azure 虚拟桌面会话主机的自动缩放功能
 
-#### 任务 1：设置诊断以跟踪 Azure 虚拟桌面自动缩放
 
-1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
-
-   >**备注**：将使用 Azure 存储帐户来存储自动缩放事件。 可以直接从 Azure 门户创建，也可以使用 Azure PowerShell，如此任务所示。
-
-1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以创建 Azure 存储帐户：
-
-   ```powershell
-   $resourceGroupName = 'az140-51-RG'
-   $location = (Get-AzResourceGroup -ResourceGroupName $resourceGroupName).Location
-   $suffix = Get-Random
-   $storageAccountName = "az140st51$suffix"
-   New-AzStorageAccount -Location $location -Name $storageAccountName -ResourceGroupName $resourceGroupName -SkuName Standard_LRS
-   ```
-
-   >**备注**：等待至存储帐户预配完成。
-
-1. 在显示 Azure 门户的浏览器窗口中，关闭“Cloud Shell”窗格。
-1. 在实验室计算机上显示 Azure 门户的浏览器中，导航到在上一练习中创建的缩放计划页。
-1. 在“az140-51-scaling-plan”**** 页上，选择“诊断设置”****，然后选择“+ 添加诊断设置”****。
-1. 在“诊断设置”**** 页上的“诊断设置名称”**** 文本框中，输入“az140-51-scaling-plan-diagnostics”****，然后在“类别组”**** 部分选择“allLogs”****。 
-1. 在同一页上，在“目标详细信息”**** 部分，选择“存档到存储帐户”****，然后在“存储帐户”**** 下拉列表中，选择以 az140st51**** 前缀开头的存储帐户名称。
-1. 选择“保存”。
-
-#### 任务 2：验证 Azure 虚拟桌面会话主机的自动缩放
+#### 任务 1：验证 Azure 虚拟桌面会话主机的自动缩放功能
 
 1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器窗口中，打开“Cloud Shell”**** 窗格内的 PowerShell **** 会话。
 1. 从“Cloud Shell”窗格中的 PowerShell 会话运行以下命令，以启动你将在本实验室中使用的 Azure 虚拟桌面会话主机 Azure VM：
@@ -197,18 +210,18 @@ lab:
 1. 在“az140-21-hp1”**** 页中，选择“会话主机”****。
 1. 等待至少一个会话主机列出并显示“关闭”**** 状态。
 
-   >**备注**：可能需要刷新页面以更新会话主机的状态。
+   > **备注**：可能需要刷新页面以更新会话主机的状态。
 
-   >**备注**：如果所有会话主机保持可用，请导航回“az140-51-scaling-plan”**** 页，并减少“最低主机百分比(%)”****“减少”**** 设置的值。
+   > **注意**：如果所有会话主机在 15 分钟后保持可用状态，请导航回 az140-51-scaling-plan 页面，并降低“最小主机百分比(%)”和“缓降”设置的值************。
 
-   >**备注**：一个或多个会话主机的状态发生更改后，自动缩放日志应会显示在 Azure 存储帐户中。 
+   > **备注**：一个或多个会话主机的状态发生更改后，自动缩放日志应会显示在 Azure 存储帐户中。 
 
 1. 在 Azure 门户中，搜索并选择“存储帐户”****，然后在“存储帐户”**** 页上，选择表示之前在本练习中创建的存储帐户（名称以 az140st51**** 前缀开头）的条目。
 1. 在“存储帐户”页上，选择“容器”****。
-1. 在容器列表中，选择“insights-logs-autoscale”****。
-1. 在“insights-logs-autoscale”**** 页上，在文件夹层次结构中导航，找到表示存储在容器中的 JSON 格式 blob 条目。
+1. 在容器列表中，选择 insights-logs-autoscaleevaluationpooled****。
+1. 在 insights-logs-autoscaleevaluationpooled 页上，在文件夹层次结构中导航，直到到达表示容器中存储的 JSON 格式 blob 的条目****。
 1. 选择 Blob 条目，选择页面最右侧的省略号图标，然后在下拉菜单中选择“下载”****。
-1. 在实验室计算机上，在所选的文本编辑器中打开下载的 Blob 并检查其内容。 你应该能够找到对自动缩放事件的引用。 
+1. 在实验室计算机上，在所选的文本编辑器中打开下载的 Blob 并检查其内容。 你应能够找到对自动缩放事件的引用，在本例中，我们可以搜索“解除分配”，使其更容易识别。
 
    >**备注**：下面是一个示例 Blob 内容，其中包括对自动缩放事件的引用：
 
@@ -219,7 +232,7 @@ lab:
    time "2023-03-26T19:35:46.0074598Z"
    resourceId   "/SUBSCRIPTIONS/AAAAAAAE-0000-1111-2222-333333333333/RESOURCEGROUPS/AZ140-51-RG/PROVIDERS/MICROSOFT.DESKTOPVIRTUALIZATION/SCALINGPLANS/AZ140-51-SCALING-PLAN"
    operationName    "ScalingEvaluationSummary"
-   category "Autoscale"
+   category "AutoscaleEvaluationPooled"
    resultType   "Succeeded"
    level    "Informational"
    correlationId    "ddd3333d-90c2-478c-ac98-b026d29e24d5"

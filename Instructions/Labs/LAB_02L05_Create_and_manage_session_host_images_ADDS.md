@@ -19,7 +19,7 @@ lab:
 
 ## 实验室方案
 
-需要在 Microsoft Entra DS 环境中创建和管理 Azure 虚拟桌面主机映像。
+你需要在 AD DS 环境中创建和管理 Azure 虚拟桌面主机映像。
 
 ## 目标
   
@@ -49,7 +49,7 @@ lab:
 1. 在实验室计算机上，启动 Web 浏览器，导航到 [Azure 门户](https://portal.azure.com)，然后通过提供你将在本实验室使用的订阅中具有所有者角色的用户帐户凭据进行登录。
 1. 在 Azure 门户中，通过选择搜索文本框右侧的“工具栏”图标，打开“Cloud Shell”窗格。
 1. 如果系统提示选择“Bash”或“PowerShell”，请选择“PowerShell”  。 
-1. 在实验室计算机上，在显示 Azure 门户的 Web 浏览器中，从“Cloud Shell”窗格中的 PowerShell 会话运行以下命令，创建将包含 Azure 虚拟桌面主机映像的资源组：
+1. 在实验室计算机显示 Azure 门户的 Web 浏览器中，从“Cloud Shell”窗格内的 PowerShell 会话运行以下命令，以创建将用于包含 Azure 虚拟桌面主机映像的资源组：
 
    ```powershell
    $vnetResourceGroupName = 'az140-11-RG'
@@ -59,7 +59,7 @@ lab:
    ```
 
 1. 在 Azure 门户的 Cloud Shell 窗格的工具栏中，选择“上传/下载”文件图标，在下拉菜单中选择“上传”，然后将文件“\\\\AZ-140\\AllFiles\\Labs\\02\\az140-25_azuredeployvm25.json 和 \\\\AZ-140\\AllFiles\\Labs\\02\\az140-25_azuredeployvm25.parameters.json”上传到 Cloud Shell 主目录中****************。
-1. 从“Cloud Shell”窗格中的 PowerShell 会话中运行以下命令，从而将运行 Windows 10 的 Azure VM 部署到新创建的子网中，该 VM 将充当 Azure 虚拟桌面客户端：
+1. 在“Cloud Shell”窗格中的 PowerShell 会话中，运行以下命令以部署运行 Windows 11 Enterprise 多会话的 Azure VM，该 VM 将用作源映像：
 
    ```powershell
    New-AzResourceGroupDeployment `
@@ -69,7 +69,7 @@ lab:
      -TemplateParameterFile $HOME/az140-25_azuredeployvm25.parameters.json
    ```
 
-   > 注意：在继续下一个练习之前，请等待部署完成。 部署可能需要大约 10 分钟时间。
+   > 注意：在继续下一个练习之前，请等待部署完成。 该部署大约需要 5-10 分钟。
 
 #### 任务 2：部署 Azure Bastion 
 
@@ -109,20 +109,18 @@ lab:
 
 1. 在“创建 Bastion”边栏选项卡的“查看 + 创建”选项卡上，选择“创建”  ：
 
-   > 注意：请等待部署完成再继续下一个练习。 部署可能需要大约 5 分钟时间。
+   > 注意：在继续下一个练习之前，请等待部署完成。 部署可能需要大约 10 分钟时间。
 
 #### 任务 3：配置 Azure 虚拟桌面主机映像
 
 1. 在 Azure 门户中，搜索并选择“虚拟机”****，然后在“虚拟机”**** 边栏选项卡上，选择“az140-25-vm0”****。
-1. 在“az140-25-vm0”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-25-vm0 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”************************。
+1. 在“az140-25-vm0”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
    |---|---|
    |用户名|**学生**|
    |密码|**Pa55w.rd1234**|
-
-   > **备注**：首先安装 FSLogix 二进制文件。
 
 1. 在与 az140-25-vm0**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****。
 1. 在与 az140-25-vm0**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以创建将用于保存映像配置的临时文件夹：
@@ -131,17 +129,9 @@ lab:
    New-Item -Type Directory -Path 'C:\Allfiles\Labs\02' -Force
    ```
 
-1. 在与 az140-25-vm0**** 的 Bastion 会话中，启动 Microsoft Edge，浏览至 [FSLogix 下载页](https://aka.ms/fslogix_download)，将 FSLogix 压缩安装二进制文件下载到文件夹“C:\\Allfiles\\Labs\\02****”，然后在文件资源管理器中，将“x64”**** 子文件夹解压缩到同一文件夹。
-1. 在与 az140-25-vm0**** 的 Bastion 会话中，切换到“管理员: Windows PowerShell ISE”**** 窗口，然后从“管理员: Windows PowerShell ISE”**** 控制台运行以下命令，按计算机安装 OneDrive：
+   > **注意**：需要逐步安装并配置经典 Microsoft Teams（出于学习目的，因为 Teams 已经存在于本实验室使用的映像中）。
 
-   ```powershell
-   Start-Process -FilePath 'C:\Allfiles\Labs\02\x64\Release\FSLogixAppsSetup.exe' -ArgumentList '/quiet' -Wait
-   ```
-
-   > 备注：请等待安装完成。 这大约需要 1 分钟。 如果安装操作触发了重新启动，请重新连接到 az140-25-vm0****。
-
-   > **备注**：接下来，你将逐步完成 Microsoft Teams 的安装和配置（出于学习目的，因为此实验室用到的映像上已经装有 Teams）。
-
+1. 在与 az140-25-vm0 的 Bastion 会话中，转到“控制面板”>“程序”>“程序和功能”，右键单击“Teams 计算机范围安装程序”程序并选择“卸载”****************。
 1. 在与 az140-25-vm0**** 的 Bastion 会话中，右键单击“开始****”，在右键单击菜单中选择“运行”****，在“运行”**** 对话框中的“打开”**** 文本框中键入“cmd”****，然后按 Enter**** 键启动命令提示符****。
 1. 在“Administrator: C:\windows\system32\cmd.exe”**** 窗口中，从命令提示符运行以下命令以准备按计算机安装 Microsoft Teams：
 
@@ -156,7 +146,7 @@ lab:
    C:\Allfiles\Labs\02\vc_redist.x64.exe /install /passive /norestart /log C:\Allfiles\Labs\02\vc_redist.log
    ```
 
-1. 在与 az140-25-vm0**** 的 Bastion 会话中，使用 Microsoft Edge 浏览到页标题为[将 Teams 桌面应用部署到 VM](https://docs.microsoft.com/en-us/microsoftteams/teams-for-vdi#deploy-the-teams-desktop-app-to-the-vm) 的文档页，单击“64 位版本”**** 链接，并在出现提示时将 Teams_windows_x64.msi**** 文件保存到文件夹“C:\\Allfiles\\Labs\\02****”。
+1. 在与 az140-25-vm0**** 的 Bastion 会话中，使用 Microsoft Edge 浏览到页标题为[将 Teams 桌面应用部署到 VM](https://learn.microsoft.com/en-us/microsoftteams/teams-for-vdi#deploy-the-teams-desktop-app-to-the-vm) 的文档页，单击“64 位版本”**** 链接，并在出现提示时将 Teams_windows_x64.msi**** 文件保存到文件夹“C:\\Allfiles\\Labs\\02****”。
 1. 在与 az140-25-vm0**** 的 Bastion 会话中，切换到“管理员: C:\windows\system32\cmd.exe”**** 窗口，从命令提示符运行以下命令，按计算机安装 Microsoft Teams：
 
    ```cmd
@@ -164,9 +154,8 @@ lab:
    ```
 
    > **备注**：安装程序支持 ALLUSER=1 和 ALLUSERS=1 参数。 ALLUSER=1 参数专门用于在 VDI 环境中进行按计算机的安装。 可以在非 VDI 和 VDI 环境中使用 ALLUSERS=1 参数。 
-   > **备注**：如果遇到错误，指出“已安装另一个版本的产品”****，请完成以下步骤：转到“控制面板 > 程序> 程序和功能”****，右键单击“Teams 计算机范围安装程序”**** 程序，然后选择“卸载”****。 继续删除程序，然后重新运行上面的步骤 13。 
 
-1. 在与 az140-25-vm0**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****，并从“管理员: Windows PowerShell ISE”**** 控制台中运行以下命令，以安装 Microsoft Edge Chromium（出于学习目的，因为此实验室用到的映像上已装有 Edge）。
+1. 在与 az140-25-vm0 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE，并从“管理员:************ Windows PowerShell ISE”控制台中运行以下命令，以安装 Microsoft Edge（出于学习目的，因为 Microsoft Edge 已存在于本实验室使用的映像中）：
 
    ```powershell
    Start-BitsTransfer -Source "https://aka.ms/edge-msi" -Destination 'C:\Allfiles\Labs\02\MicrosoftEdgeEnterpriseX64.msi'
@@ -177,7 +166,7 @@ lab:
 
    > **备注**：在多语言环境中运行时，可能需要安装语言包。 有关此过程的详细信息，请参阅 Microsoft Docs 文章[将语言包添加到 Windows 10 多会话映像](https://docs.microsoft.com/en-us/azure/virtual-desktop/language-packs)。
 
-   > **备注**：接下来，你将禁用 Windows 自动更新、禁用存储感知、配置时区重定向和配置遥测收集。 一般情况下，应首先应用所有最新更新。 在此实验室中，请跳过此步骤，以尽量缩短实验室的用时。
+   > **备注**：接下来，你将禁用 Windows 自动更新、禁用存储感知、配置时区重定向和配置遥测收集。 通常，应首先应用最新的质量更新。 在此实验室中，请跳过此步骤，以尽量缩短实验室的用时。
 
 1. 在与 az140-25-vm0**** 的 Bastion 会话中，切换到“管理员: C:\windows\system32\cmd.exe”**** 窗口，然后从命令提示符运行以下命令以禁用自动更新：
 
@@ -188,7 +177,7 @@ lab:
 1. 在“管理员: C:\windows\system32\cmd.exe”**** 窗口中，从命令提示符运行以下命令以禁用存储感知：
 
    ```cmd
-   reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v 01 /t REG_DWORD /d 0 /f
+   reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v 01 /t REG_DWORD /d 0 /f
    ```
 
 1. 在“管理员: C:\windows\system32\cmd.exe”**** 窗口中，从命令提示符运行以下命令以配置时区重定向：
@@ -215,6 +204,8 @@ lab:
    cleanmgr /d C: /verylowdisk
    ```
 
+   > **注意**：磁盘清理过程可能需要 3-5 分钟。
+
 #### 任务 4：创建 Azure 虚拟桌面主机映像
 
 1. 在与 az140-25-vm0**** 的 Bastion 会话中的“管理员: C:\windows\system32\cmd.exe”**** 窗口中，从命令提示符运行 Sysprep 实用工具，以便让操作系统准备好生成映像并自动关机：
@@ -225,6 +216,7 @@ lab:
 
    > **备注**：等待 sysprep 过程完成。 这可能需要大约 2 分钟。 这会自动关闭操作系统。 
 
+1. 在实验室计算机中，在“连接错误”对话框中，选择“关闭”********。
 1. 在实验室计算机上的显示 Azure 门户的 Web 浏览器中，搜索并选择“虚拟机”****，然后在“虚拟机”**** 边栏选项卡中选择“az140-25-vm0”****。
 1. 在“az140-25-vm0”**** 边栏选项卡的“概要”**** 部分上方的工具栏中，单击“刷新”****，验证 Azure VM 的“状态”**** 是否已更改为“已停止”****，单击“停止”****，并在系统提示确认时单击“确定”****，以将 Azure VM 转换为“已停止(已解除分配)”**** 状态。
 1. 在“az140-25-vm0”**** 边栏选项卡上，验证 Azure VM 的“状态”**** 是否已更改为“已停止(已解除分配)”**** 状态，然后在工具栏中单击“捕获”****。 这将自动显示“创建映像”**** 边栏选项卡。
@@ -234,7 +226,7 @@ lab:
    |---|---|
    |将映像共享到 Azure Compute Gallery|是的，将映像共享到库作为映像版本****|
    |创建映像后，将自动删除此虚拟机|已清除复选框|
-   |目标 Azure Compute Gallery|新库名称 az14025imagegallery****|
+   |目标 Azure Compute Gallery|创建名为 az14025imagegallery 的新库****|
    |操作系统状态|**通用**|
 
 1. 在“创建映像”边栏选项卡的“基本”选项卡中，单击“目标映像定义”文本框下方的“新建”****************。
@@ -256,11 +248,11 @@ lab:
    |生命周期终结日期|当前日期起一年|
    |默认副本计数|**1**|
    |目标区域副本计数|**1**|
-   |存储帐户类型|高级 SSD LRS****|
+   |默认存储 SKU|高级 SSD LRS****|
 
 1. 在“创建映像”**** 边栏选项卡的“查看 + 创建”**** 选项卡中，单击“创建”****。
 
-   > 备注：请等待部署完成。 这可能需要大约 20 分钟。
+   > 备注：请等待部署完成。 这可能需要大约 10-15 分钟。
 
 1. 在实验室计算机显示 Azure 门户的 Web 浏览器中，搜索并选择“Azure Compute Gallery”，在“Azure Compute Gallery”边栏选项卡上选择“az14025imagegallery”条目，然后在“az14025imagegallery”边栏选项卡上验证是否存在表示新建的映像的“az140-25-host-image”条目****************。
 
@@ -284,9 +276,10 @@ lab:
    |主机池名称|az140-25-hp4****|
    |位置|在本实验室的第一个练习中，将资源部署到其中的 Azure 区域的名称|
    |验证环境|**否**|
+   |首选应用组类型|**桌面**|
    |主机池类型|**池**|
-   |最大会话限制|**50**|
    |负载均衡算法|**广度优先**|
+   |最大会话限制|**12**|
 
 1. 在“创建主机池”**** 边栏选项卡的“虚拟机”**** 选项卡中，指定以下设置：
 
@@ -309,19 +302,21 @@ lab:
    |虚拟机大小|Standard D2s v3|
    |VM 数量|**1**|
    |OS 磁盘类型|**标准 SSD**|
+   |启动诊断|使用托管存储帐户启用（推荐）|
    |虚拟网络|az140-adds-vnet11|
    |子网|hp4-Subnet (10.0.4.0/24)****|
    |网络安全组|**基本**|
-   |公共入站端口|**是**|
-   |允许的入站端口|**RDP**|
+   |公共入站端口|**否**|
+   |选择要加入的目录|**Active Directory**|
    |AD 域加入 UPN|**student@adatum.com**|
    |密码|**Pa55w.rd1234**|
+   |确认密码|**Pa55w.rd1234**|
    |指定域或单元|**是**|
    |要加入的域|adatum.com|
    |组织单位路径|OU=WVDInfra,DC=adatum,DC=com|
-   |用户名|学生|
-   |密码|Pa55w.rd1234|
-   |确认密码|Pa55w.rd1234|
+   |用户名|**学生**|
+   |密码|**Pa55w.rd1234**|
+   |确认密码|**Pa55w.rd1234**|
 
 1. 在“创建主机池”边栏选项卡的“工作区”选项卡中，指定以下设置并选择“查看 + 创建”  ：
 
@@ -332,11 +327,10 @@ lab:
 1. 在“创建主机池”边栏选项卡的“查看 + 创建”选项卡中，选择“创建”  。
 
    > 备注：请等待部署完成。 这可能需要大约 10 分钟。
-   > 
-   > **注意**如果由于达到配额限制而导致部署失败，请执行第一个实验室中说明的步骤，自动请求将标准 D2sv3 限制的配额增加到 30。
+
+   > **注意**：如果由于达到配额限制而导致部署失败，请执行第一个实验室中说明的步骤，自动请求将标准 D2sv3 限制的配额增加到 30。
 
    > **备注**：基于自定义映像部署主机后，应考虑运行可从 [其 GitHub 存储库](https://github.com/The-Virtual-Desktop-Team/)获取的虚拟桌面优化工具。
-
 
 ### 练习 3：停止并解除分配在实验室中预配的 Azure VM
 

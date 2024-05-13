@@ -47,7 +47,7 @@ lab:
 1. 配置 Microsoft Entra 多重身份验证 (MFA)
 1. 注册 Microsoft Entra MFA 用户
 1. 配置 Microsoft Entra 混合加入
-1. 触发 Microsoft Entra Connect Delta 同步
+1. 触发 Microsoft Azure Active Directory Connect 增量同步
 
 #### 任务 1：配置 Microsoft Entra 高级版 P2 许可
 
@@ -101,7 +101,7 @@ lab:
 > **备注**：当根据设备的 Microsoft Entra 联接状态设置条件访问时，可以利用此功能实现额外的安全性。
 
 1. 切换到实验室计算机，在显示 Azure 门户的 Web 浏览器中，搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中选择“az140-dc-vm11”  。
-1. 在“az140-dc-vm11”边栏选项卡中，选择“连接”，在下拉菜单中选择“Bastion”，在“az140-dc-vm11 \| 连接”边栏选项卡的“Bastion”选项卡中，选择“使用 Bastion”     。
+1. 在“az140-dc-vm11”边栏选项卡上，选择“连接”，在下拉菜单中选择“通过 Bastion 进行连接”************。
 1. 出现提示时，提供以下凭据并选择“连接”：
 
    |设置|值|
@@ -109,18 +109,17 @@ lab:
    |用户名|**学生**|
    |密码|**Pa55w.rd1234**|
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，展开“开始”**** 菜单中的“Microsoft Entra Connect”**** 文件夹，然后选择“Microsoft Entra Connect”****。
-   > 注意：如果收到同步服务未运行的故障错误窗口，请转到 PowerShell 命令窗口并输入 Start-Service "ADSync"，然后再次尝试执行步骤 4********。
-1. 在“Microsoft Entra Connect”**** 窗口的“欢迎使用 Microsoft Entra Connect”**** 页上，选择“配置”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“其他任务”**** 页上，选择“配置设备选项”****，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“概述”**** 页上，查看有关混合 Microsoft Entra 联接**** 和设备写回**** 的信息，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“连接到 Microsoft Entra”**** 页面中，使用你在上一个练习中创建的 aadsyncuser**** 用户帐户凭据进行身份验证，然后选择“下一步”****。  
+1. 在与 az140-dc-vm11 的 Bastion 会话中，在“开始”菜单中展开 Azure AD Connect 文件夹，并选择“Azure AD Connect”****************。
 
-   > **备注**：提供在本实验室前面记录的 aadsyncuser**** 帐户的 userPrincipalName 属性，并指定在创建此用户帐户时设置的密码。 
+   > 注意：如果收到同步服务未运行的故障错误窗口，请转到 PowerShell 命令窗口并输入 Start-Service "ADSync"，然后再次尝试执行上一步********。
 
-1. 在“Microsoft Entra Connect”**** 窗口中的“设备选项”**** 页上，确保已选择“配置混合 Microsoft Entra 联接”**** 选项，然后选择“下一步”****。 
-1. 在“Microsoft Entra Connect”**** 窗口中的“设备操作系统”**** 页上，选择“Windows 10 或更高版本的域加入设备”**** 复选框，然后选择“下一步”****。 
-1. 在“Microsoft Entra Connect”**** 窗口中的“SCP 配置”**** 页上，选择“adatum.com”**** 条目旁边的复选框，在“身份验证服务”**** 下拉列表中，选择“Microsoft Entra”**** 条目，然后选择“添加”****。 
+1. 在“Microsoft Azure Active Directory Connect”窗口的“欢迎使用 Azure AD Connect”页上，选择“配置”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“其他任务”页上，选择“配置设备选项”，并选择“下一步”****************。
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“概述”页上，查看与“混合 Microsoft Entra 联接”和“设备写回”相关的信息，并选择“下一步”********************。
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“连接到 Microsoft Entra”页上，使用在之前的实验室中创建的用户帐户“aadsyncuser”的凭据进行身份验证，然后选择“下一步”****************。  
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“设备选项”页上，确保已选择“配置混合 Azure AD 联接”选项，并选择“下一步”****************。 
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“设备操作系统”页上，选择“Windows 10 或更高版本的已加入域的设备”复选框，并选择“下一步”****************。 
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“SCP 配置”页上，选择“adatum.com”条目旁边的复选框，在“身份验证服务”下拉列表中，选择“Azure Active Directory”条目，并选择“添加”************************。 
 1. 出现提示时，在“企业管理员凭据”**** 对话框中，指定以下凭据，然后选择“确定”****：
 
    |设置|值|
@@ -128,8 +127,8 @@ lab:
    |用户名|ADATUM\Student|
    |密码|**Pa55w.rd1234**|
 
-1. 返回“Microsoft Entra Connect”**** 窗口中的“SCP 配置”**** 页，选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“准备配置”**** 页上，选择“配置”****，并在配置完成后选择“退出”****。
+1. 回到“Microsoft Azure Active Directory Connect”窗口的“SCP 配置”页，选择“下一步”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“准备配置”页上，选择“配置”，配置完成后选择“退出”****************。
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，以管理员身份启动 Windows PowerShell ISE****。
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台运行以下命令，将 az140-cl-vm11**** 计算机帐户移动到 WVDClients**** 组织单位 (OU)：
 
@@ -138,22 +137,21 @@ lab:
    ```
 
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，展开“开始”**** 菜单中的“Microsoft Entra Connect”**** 文件夹，然后选择“Microsoft Entra Connect”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“欢迎使用 Microsoft Entra Connect”**** 页上，选择“配置”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“其他任务”**** 页上，选择“自定义同步选项”****，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“连接到 Microsoft Entra”**** 页中，使用你在上一个练习中创建的 aadsyncuser**** 用户帐户凭据进行身份验证，然后选择“下一步”****。 
+1. 在“Microsoft Azure Active Directory Connect”窗口的“欢迎使用 Azure AD Connect”页上，选择“配置”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“附加任务”页上，依次选择“自定义同步选项”和“下一步”****************。
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“连接到 Microsoft Entra”页上，使用在前面的练习中创建的用户帐户“aadsyncuser”的凭据进行身份验证，然后选择“下一步”****************。 
+1. 在“Microsoft Azure Active Directory Connect”窗口的“连接到目录”页上，选择“下一步”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口中的“域和 OU 筛选”页上，确保已选择“同步已选择的域和 OU”选项，展开“adatum.com”节点，确保已选择“ToSync”OU 旁的复选框，然后选择“WVDClients”OU 旁的复选框，并选择“下一步”****************************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“可选功能”页上，接受默认设置，然后选择“下一步”************。
+1. 在“Microsoft Azure Active Directory Connect”窗口的“准备配置”页上，确保已选中“配置完成后启动同步过程”复选框，然后选择“配置”****************。
+1. 查看“配置完成”页中的信息，然后选择“退出”关闭“Microsoft Azure Active Directory Connect”窗口。
 
-   > **备注**：提供在本实验室前面记录的 aadsyncuser**** 帐户的 userPrincipalName 属性，并指定在创建此用户帐户时设置的密码。 
+#### 任务 5：触发 Microsoft Azure Active Directory Connect 完全同步
 
-1. 在“Microsoft Entra Connect”**** 窗口中的“连接目录”**** 页上，选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“域和 OU 筛选”**** 页上，确保选中“同步所选域和 OU”**** 选项，展开“adatum.com”**** 节点，确保选中“ToSync”**** OU 旁边的复选框，选择“WVDClients”**** OU 旁边的复选框，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口的“可选功能”**** 页上接受默认设置，然后选择“下一步”****。
-1. 在“Microsoft Entra Connect”**** 窗口中的“准备好进行配置”**** 页上，确保未选中“配置完成后启动同步过程”**** 复选框，然后选择“配置”****。
-1. 查看“配置完成”**** 页上的信息，然后选择“退出”**** 关闭“Microsoft Entra Connect”**** 窗口。
-
-#### 任务 5：触发 Microsoft Entra Connect 增量同步
-
+1. 在实验室计算机上，在 Azure 门户中搜索并选择“虚拟机”，然后在“虚拟机”边栏选项卡中，选择“az140-cl-vm11”************ 条目。 此时会打开“az140-cl-vm11”边栏选项卡****。
+1. 在“az140-cl-vm11”边栏选项卡中，选择“重启”，然后等待“成功重启虚拟机”通知出现************。
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，切换到“管理员: Windows PowerShell ISE”**** 窗口。
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，从“管理员: Windows PowerShell ISE”**** 控制台窗格运行以下命令以触发 Microsoft Entra Connect 增量同步：
+1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******Windows PowerShell ISE** 控制台窗格，运行以下命令以触发 Microsoft Azure Active Directory Connect 完全同步：
 
    ```powershell
    Import-Module -Name "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync"
@@ -161,9 +159,9 @@ lab:
    ```
 
 1. 在与 az140-dc-vm11**** 的 Bastion 会话中，启动 Microsoft Edge，并导航到 [Azure 门户](https://portal.azure.com)。 如果出现提示，请使用在与本实验室所用订阅关联的 Microsoft Entra 租户中具有全局管理员角色的用户帐户的 Microsoft Entra 凭据登录。
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中，搜索并选择“Azure Active Directory”**** 以导航到与此实验室使用的 Azure 订阅关联的 Microsoft Entra 租户。
-1. 在“Azure Active Directory”边栏选项卡的左侧垂直菜单栏中，在“管理”**** 部分单击“设备”****。 
-1. 在“设备 | 所有设备”**** 边栏选项卡上，查看设备列表，验证 az140-cl-vm11**** 设备是否在“联接类型”**** 列中列出“已建立混合 Microsoft Entra 联接”**** 条目。
+1. 在与 az140-dc-vm11 的 Bastion 会话中，在显示 Azure 门户的 Microsoft Edge 窗口中搜索并选择“Microsoft Entra ID”，以导航到与本实验室中所用 Azure 订阅关联的 Microsoft Entra 租户********。
+1. 在“Microsoft Entra ID”边栏选项卡上左侧的垂直菜单栏中，在“管理”部分中，单击“设备”********。 
+1. 在“设备 | 所有设备”边栏选项卡上，查看设备列表，验证“az140-cl-vm11”设备是否在“联接类型”列中列出了“已建立 Microsoft Entra 混合联接”条目****************。
 
    > **备注**：同步可能需要等待几分钟才会生效，然后设备才会显示在 Azure 门户中。
 
