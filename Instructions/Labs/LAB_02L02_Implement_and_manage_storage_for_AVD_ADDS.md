@@ -97,7 +97,20 @@ lab:
    Get-ChildItem -Path C:\Allfiles\Labs\02 -File -Recurse | Unblock-File
    ```
 
-1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格，运行以下命令，设置运行后续脚本所需的变量：
+1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
+
+   ```powershell
+   Connect-AzAccount
+   ```
+
+1. 如果出现提示，请提供在本实验室所用订阅中具有所有者角色的 Entra ID 用户帐户的凭据。
+1. 在“管理员:**** Windows PowerShell ISE”控制台中，运行以下命令以禁用 Windows 帐户管理器：
+
+   ```powershell
+   Update-AzConfig -EnableLoginByWam $false
+   ```
+   
+1. 在“管理员:**** Windows PowerShell ISE”脚本窗格，运行以下命令，设置运行后续脚本所需的变量：
 
    ```powershell
    $subscriptionId = (Get-AzContext).Subscription.Id
@@ -105,7 +118,7 @@ lab:
    $storageAccountName = (Get-AzStorageAccount -ResourceGroupName $resourceGroupName)[0].StorageAccountName
    ```
 
-1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格中，运行以下命令，创建 AD DS 计算机对象，其表示之前在本任务中创建的 Azure 存储帐户，并用于实现其 AD DS 身份验证：
+1. 在“管理员:**** Windows PowerShell ISE”脚本窗格中，运行以下命令，创建 AD DS 计算机对象，其表示之前在本任务中创建的 Azure 存储帐户，并用于实现其 AD DS 身份验证：
 
    >**备注**：如果在运行此脚本块时收到错误消息，请确保位于与 CopyToPSPath.ps1 脚本相同的目录。 根据本实验室之前提取文件的方式，它们可能位于 AzFilesHybrid 子文件夹中。 在 PowerShell 上下文中，使用 cd AzFilesHybrid 将目录更改为文件夹****。
 
@@ -120,7 +133,7 @@ lab:
       -OrganizationalUnitDistinguishedName 'OU=WVDInfra,DC=adatum,DC=com'
    ```
 
-1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”脚本窗格中，运行以下命令，验证 Azure 存储帐户上是否启用了 AD DS 身份验证：
+1. 在“管理员:**** Windows PowerShell ISE”脚本窗格中，运行以下命令，验证 Azure 存储帐户上是否启用了 AD DS 身份验证：
 
    ```powershell
    $storageaccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
