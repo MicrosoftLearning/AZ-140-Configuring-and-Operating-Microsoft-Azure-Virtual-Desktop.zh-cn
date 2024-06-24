@@ -97,19 +97,19 @@ lab:
    Get-ChildItem -Path C:\Allfiles\Labs\02 -File -Recurse | Unblock-File
    ```
 
+1. 在“管理员:**** Windows PowerShell ISE”控制台中，运行以下命令以禁用 Windows 帐户管理器：
+
+   ```powershell
+   Update-AzConfig -EnableLoginByWam $false
+   ```
+
 1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
 
    ```powershell
    Connect-AzAccount
    ```
 
-1. 如果出现提示，请提供在本实验室所用订阅中具有所有者角色的 Entra ID 用户帐户的凭据。
-1. 在“管理员:**** Windows PowerShell ISE”控制台中，运行以下命令以禁用 Windows 帐户管理器：
-
-   ```powershell
-   Update-AzConfig -EnableLoginByWam $false
-   ```
-   
+1. 如果出现提示，请提供在本实验室所用订阅中具有所有者角色的 Entra ID 用户帐户的凭据。 
 1. 在“管理员:**** Windows PowerShell ISE”脚本窗格，运行以下命令，设置运行后续脚本所需的变量：
 
    ```powershell
