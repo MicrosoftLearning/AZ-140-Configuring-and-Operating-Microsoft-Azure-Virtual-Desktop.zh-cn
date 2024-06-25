@@ -82,6 +82,12 @@ lab:
 
    > **注意**：可能需要等待 3-5 分钟，然后才会显示 Az 模块安装的任何输出。 在输出停止后，可能需要再等待 5 分钟****。 这是预期的行为。
 
+1. 在“管理员:**** Windows PowerShell ISE”控制台中，运行以下命令以禁用 Windows 帐户管理器：
+
+   ```powershell
+   Update-AzConfig -EnableLoginByWam $false
+   ```
+
 1. 在“管理员:Windows PowerShell ISE”控制台中运行以下命令，以登录 Azure 订阅：
 
    ```powershell
