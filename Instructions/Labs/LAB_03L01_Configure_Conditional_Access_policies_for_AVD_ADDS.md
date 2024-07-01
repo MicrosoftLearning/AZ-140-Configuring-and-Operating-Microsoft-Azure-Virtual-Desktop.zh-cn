@@ -136,7 +136,7 @@ lab:
    Move-ADObject -Identity "CN=az140-cl-vm11,CN=Computers,DC=adatum,DC=com" -TargetPath "OU=WVDClients,DC=adatum,DC=com"
    ```
 
-1. 在与 az140-dc-vm11**** 的 Bastion 会话中，展开“开始”**** 菜单中的“Microsoft Entra Connect”**** 文件夹，然后选择“Microsoft Entra Connect”****。
+1. 在与 az140-dc-vm11 的 Bastion 会话中，在“开始”菜单中展开 Azure AD Connect 文件夹，并选择“Azure AD Connect”****************。
 1. 在“Microsoft Azure Active Directory Connect”窗口的“欢迎使用 Azure AD Connect”页上，选择“配置”************。
 1. 在“Microsoft Azure Active Directory Connect”窗口的“附加任务”页上，依次选择“自定义同步选项”和“下一步”****************。
 1. 在“Microsoft Azure Active Directory Connect”窗口中的“连接到 Microsoft Entra”页上，使用在前面的练习中创建的用户帐户“aadsyncuser”的凭据进行身份验证，然后选择“下一步”****************。 
