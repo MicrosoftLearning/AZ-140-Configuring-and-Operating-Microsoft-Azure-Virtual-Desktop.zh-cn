@@ -1,3 +1,5 @@
+**本课程将于 **2024 年 9 月 30 日**停用。课程停用后，将移除所有 GitHub 存储库。谢谢。**
+
 # AZ-140:配置和操作 Microsoft Azure 虚拟桌面
 
 - [实验室的链接（HTML 格式）](https://microsoftlearning.github.io/AZ-140-Configuring-and-Operating-Microsoft-Azure-Virtual-Desktop/)
