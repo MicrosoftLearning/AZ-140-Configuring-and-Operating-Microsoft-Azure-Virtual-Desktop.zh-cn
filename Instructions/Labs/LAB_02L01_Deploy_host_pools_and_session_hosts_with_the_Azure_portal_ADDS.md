@@ -60,7 +60,7 @@ lab:
 1. 在与 az140-dc-vm11 的 Bastion 会话中，从“管理员: ******** Windows PowerShell ISE”控制台运行以下命令，创建一个组织单位，该组织单位将托管 Azure 虚拟桌面主机的计算机对象：
 
    ```powershell
-   New-ADOrganizationalUnit 'WVDInfra' –path 'DC=adatum,DC=com' -ProtectedFromAccidentalDeletion $false
+   New-ADOrganizationalUnit 'WVDInfra' -path 'DC=adatum,DC=com' -ProtectedFromAccidentalDeletion $false
    ```
 
 1. 在“管理员:Windows PowerShell ISE”控制台，运行以下命令，以标识 aduser1 帐户的用户主体名称：
