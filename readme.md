@@ -28,9 +28,11 @@
 
 - 你可以提交 bug、更改、改进和想法。  先于我们找到了新的 Azure 功能？  提交新的演示吧！
 
-## 说明
+## 备注
 
-**实验室包括两个独立的学习路径，具体取决于你决定使用的标识提供者。**
+> **重要说明**：实验室已更新，以针对基于 Microsoft Entra ID 的实现 Azure 虚拟桌面的场景（本实验室的指令位于“**指令**” -&gt;**Labs_EntraID** 目录中）。 
+
+> **重要说明**：不再维护或支持以下两个轨道（此实验室的指令位于“**指令**” -&gt;“**实验室**”目录中）
 
 - Active Directory 域服务 (AD DS)。 此学习路径由下列实验室构成：
 
@@ -45,7 +47,7 @@
    - LAB_04L02_Package_AVD_applications_ADDS.md
    - LAB_05L01_Implement_autoscaling_in_host_pools_ADDS.md
 
-- Azure Active Directory 域服务 (Azure AD DS)。 此学习路径由下列实验室构成：
+- Microsoft Entra 域服务 (Microsoft Entra DS) 此学习路径由下列实验室构成：
 
    - LAB_01L01_Prepare_for_deployment_of_AVD_AADDS.md
    - LAB_02L01_Create_and_configure_host_pools_and_session_hosts_AADDS.md
